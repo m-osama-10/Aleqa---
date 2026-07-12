@@ -1,0 +1,99 @@
+{
+  "expo": {
+    "name": "Alieqa",
+    "slug": "alieqa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "scheme": "alieqa",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2E7D4F"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.alieqa",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleLocalizations": ["ar", "en"],
+        "CFBundleDevelopmentRegion": "ar",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "associatedDomains": []
+    },
+    "android": {
+      "package": "app.alieqa",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2E7D4F"
+      },
+      "permissions": [
+        "INTERNET",
+        "VIBRATE",
+        "POST_NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "color": "#2E7D4F",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": true
+        }
+      ],
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 24,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "alieqa-mobile"
+      },
+      "supabaseUrl": "https://lepdythxcdurjwncxnnt.supabase.co",
+      "supabasePublishableKey": "sb_publishable_nWluULZyJ-hU3f42jd0mbg_8iNXWxkp"
+    },
+    "owner": "alieqa",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/alieqa-mobile"
+    },
+    "locales": {
+      "ar": "./locales/ar.json",
+      "en": "./locales/en.json"
+    }
+  }
+}
