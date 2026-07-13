@@ -115,10 +115,10 @@ export function CalculatorScreenMobile() {
 
   // Enable manual mode: snapshot current LP result into editable percents.
   const enableManual = () => {
-    const snap: Partial<Record<IngredientKey, number>> = {};
-    for (const k of INGREDIENT_ORDER) {
-      const c = lpResult.components.find((c) => c.ingredient.key === k);
-      snap[k] = c ? +c.percent.toFixed(1) : 0;
+    const snap: Record<string, number> = {};
+    for (const c of lpResult.components) {
+      // use c directly
+      snap[c.ingredient.key] = +c.percent.toFixed(1);
     }
     setManualPercents(snap);
     setManualMode(true);
@@ -527,15 +527,15 @@ export function CalculatorScreenMobile() {
                 <Sparkles className="h-3 w-3" /> {t("calc.diff_label")}
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {INGREDIENT_ORDER.map((k) => {
-                  const bal = balancedResult.components.find((c) => c.ingredient.key === k)?.percent ?? 0;
-                  const eco = lpResult.components.find((c) => c.ingredient.key === k)?.percent ?? 0;
+                {ingredients.map((ing) => {
+                  const bal = balancedResult.components.find((c) => c.ingredient.key === ing.key)?.percent ?? 0;
+                  const eco = lpResult.components.find((c) => c.ingredient.key === ing.key)?.percent ?? 0;
                   const diff = +(eco - bal).toFixed(1);
                   if (Math.abs(diff) < 0.2) return null;
-                  const ingLabel = lang === "ar" ? INGREDIENTS[k].short : INGREDIENTS[k].shortEn;
+                  const ingLabel = lang === "ar" ? ing.name : ing.nameEn;
                   return (
                     <span
-                      key={k}
+                      key={ing.key}
                       className={cn(
                         "rounded-md px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
                         diff > 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-700"
@@ -569,21 +569,17 @@ export function CalculatorScreenMobile() {
             )}
           </div>
           <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-            {INGREDIENT_ORDER.filter((k) => animal.bounds[k].ub > 0).map((k) => {
-              const ing = INGREDIENTS[k];
-              const Icon = ing.icon;
-              const ingShort = lang === "ar" ? ing.short : ing.shortEn;
+            {ingredients.filter((ing) => {
+              const b = animal.bounds[ing.key];
+              return (b && b.ub > 0) || (!b && ing.maxUsage > 0);
+            }).map((ing) => {
+              const ingShort = lang === "ar" ? ing.name : ing.nameEn;
               return (
                 <div
-                  key={k}
+                  key={ing.key}
                   className="flex items-center gap-2 rounded-lg border border-border/50 bg-card px-2.5 py-1.5"
                 >
-                  <span
-                    className="flex h-6 w-6 items-center justify-center rounded-md text-white"
-                    style={{ backgroundColor: ing.color }}
-                  >
-                    <Icon className="h-3 w-3" />
-                  </span>
+                  <span className="text-lg">{ing.emoji}</span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[11px] font-bold text-foreground">{ingShort}</p>
                   </div>
@@ -592,10 +588,10 @@ export function CalculatorScreenMobile() {
                     inputMode="decimal"
                     min={0}
                     step={0.5}
-                    value={prices[k]}
+                    value={prices[ing.key] ?? ing.price}
                     onChange={(e) => {
                       const v = Number(e.target.value);
-                      if (isFinite(v) && v >= 0) updatePrice(k, v);
+                      if (isFinite(v) && v >= 0) updatePrice(ing.key as never, v);
                     }}
                     className="w-14 rounded-md border border-border bg-background px-1 py-0.5 text-center text-[11px] font-extrabold tabular-nums focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
                   />
@@ -667,7 +663,11 @@ export function CalculatorScreenMobile() {
             percents={manualPercents}
             onChange={(k, v) => setManualPercents((p) => ({ ...p, [k]: v }))}
             result={displayResult}
-            availableKeys={INGREDIENT_ORDER.filter((k) => animal.bounds[k].ub > 0)}
+            availableKeys={ingredients.filter((ing) => {
+              const b = animal.bounds[ing.key];
+              return (b && b.ub > 0) || (!b && ing.maxUsage > 0);
+            }).map((ing) => ing.key)}
+            ingredients={ingredients}
             prices={prices}
             onSave={handleSave}
             onShare={handleShare}
@@ -727,10 +727,11 @@ export function CalculatorScreenMobile() {
 /* ================================================================== */
 
 interface ManualEditorProps {
-  percents: Partial<Record<IngredientKey, number>>;
-  onChange: (key: IngredientKey, value: number) => void;
+  percents: Record<string, number>;
+  onChange: (key: string, value: number) => void;
   result: import("@/lib/feed-data").FormulationResult;
-  availableKeys: IngredientKey[];
+  availableKeys: string[];
+  ingredients: import("@/lib/ingredient-db").IngredientNutrition[];
   prices: PriceMap;
   onSave: () => void;
   onShare: () => void;
@@ -742,6 +743,7 @@ function ManualEditor({
   onChange,
   result,
   availableKeys,
+  ingredients,
   prices,
   onSave,
   onShare,
@@ -752,18 +754,22 @@ function ManualEditor({
   const fmt = (n: number, d = 2) =>
     n.toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
+  // Build ingredient map
+  const ingMap: Record<string, import("@/lib/ingredient-db").IngredientNutrition> = {};
+  for (const ing of ingredients) ingMap[ing.key] = ing;
+
   const sumPct = availableKeys.reduce((s, k) => s + (percents[k] ?? 0), 0);
   const sumOk = Math.abs(sumPct - 100) <= 0.1;
 
   // Memoize component rows so only changed rows re-render (#14 perf).
   const rows = availableKeys.map((k) => {
-    const ing = INGREDIENTS[k];
-    const Icon = ing.icon;
+    const ing = ingMap[k];
     const pct = percents[k] ?? 0;
     const kg = +((pct / 100) * result.dmi).toFixed(3);
-    const cost = +(kg * (prices[k] ?? ing.defaultPrice)).toFixed(2);
-    const ingName = lang === "ar" ? ing.name : ing.nameEn;
-    return { k, ing, Icon, pct, kg, cost, ingName };
+    const cost = +(kg * (prices[k] ?? ing?.price ?? 0)).toFixed(2);
+    const ingName = lang === "ar" ? (ing?.name ?? k) : (ing?.nameEn ?? k);
+    const emoji = ing?.emoji ?? "🧪";
+    return { k, ing, emoji, pct, kg, cost, ingName };
   });
 
   return (
@@ -821,19 +827,16 @@ function ManualEditor({
 
         {/* Editable component rows */}
         <div className="space-y-2">
-          {rows.map(({ k, ing, Icon, pct, kg, cost, ingName }) => (
+          {rows.map(({ k, ing, emoji, pct, kg, cost, ingName }) => (
               <div key={k} className="rounded-lg border border-border/60 bg-card p-2.5">
                 <div className="flex items-center gap-2">
-                  <span
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-white"
-                    style={{ backgroundColor: ing.color }}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-secondary text-base">
+                    {emoji}
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-foreground">{ingName}</p>
                     <p className="text-[10px] text-muted-foreground">
-                      {fmt(kg, 2)} {t("common.kg")} · {fmt(cost, 1)} {t("common.egp")} · {t("manual.protein")} {fmt(ing.protein, 1)}%
+                      {fmt(kg, 2)} {t("common.kg")} · {fmt(cost, 1)} {t("common.egp")} · {t("manual.protein")} {fmt(ing?.protein ?? 0, 1)}%
                     </p>
                   </div>
                   <div className="flex items-center gap-1">

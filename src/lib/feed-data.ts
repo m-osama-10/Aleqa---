@@ -201,7 +201,7 @@ export interface AnimalProfile {
     fiberMax: number; // crude fiber max %
   };
   /** Per-ingredient bounds as % of ration (0-100). */
-  bounds: Record<IngredientKey, { lb: number; ub: number }>;
+  bounds: Record<string, { lb: number; ub: number }>;
   /** Minimum roughage (hay+straw) % for ruminants. */
   forageMin: number;
 }
