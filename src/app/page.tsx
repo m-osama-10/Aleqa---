@@ -10,6 +10,37 @@ import { AuthProvider, useAuth } from "@/lib/store/auth-context";
 import { useAppStore } from "@/lib/store/app-store";
 import { LanguageProvider } from "@/lib/i18n";
 
+/* ---------- localStorage version check (prevents crashes from old data) ---------- */
+const LS_VERSION_KEY = "alieqa.version";
+const LS_CURRENT_VERSION = "3"; // bump when schema changes
+
+function checkLocalStorageVersion() {
+  if (typeof window === "undefined") return;
+  try {
+    const version = localStorage.getItem(LS_VERSION_KEY);
+    if (version !== LS_CURRENT_VERSION) {
+      // Clear ALL old alieqa.* keys to prevent schema mismatch crashes
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("alieqa.")) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+      localStorage.setItem(LS_VERSION_KEY, LS_CURRENT_VERSION);
+      console.log("[Alieqa] Cleared old localStorage data (version mismatch)");
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+// Run immediately on client
+if (typeof window !== "undefined") {
+  checkLocalStorageVersion();
+}
+
 /* ---------- entered flag (localStorage) ---------- */
 const ENTERED_KEY = "aleeqa.entered.v1";
 const listeners = new Set<() => void>();
