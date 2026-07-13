@@ -37,6 +37,7 @@ import {
 } from "@/lib/feed-data";
 import { computeManualResult, formulateRation, formulateRationWithLocks } from "@/lib/feed-lp";
 import { usePrices, useRations, useIngredients, type PriceMap } from "@/lib/storage";
+import { CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/ingredient-db";
 import { printRationReport } from "@/lib/ration-report";
 import { useLang } from "@/lib/i18n";
 import { RationResult, rationToText } from "./ration-result";
@@ -57,6 +58,8 @@ export function CalculatorScreen() {
   const [production, setProduction] = useState(ANIMALS.dairy_cow.productionDefault);
   const [flockSize, setFlockSize] = useState(ANIMALS.dairy_cow.defaultFlockSize);
   const [mode, setMode] = useState<FormulationMode>("balanced");
+  const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set());
+  const [ingredientSelectionMode, setIngredientSelectionMode] = useState<"auto" | "manual">("auto");
 
   // Manual percentage editing.
   const [manualMode, setManualMode] = useState(false);
@@ -73,7 +76,30 @@ export function CalculatorScreen() {
     setFlockSize(ANIMALS[key].defaultFlockSize);
     setManualMode(false);
     setManualPercents({});
+    setSelectedIngredients(new Set());
+    setIngredientSelectionMode("auto");
   };
+
+  // Get ingredients available for this animal
+  const availableIngredients = useMemo(() => {
+    return ingredients.filter((ing) => {
+      const b = animal.bounds[ing.key];
+      return (b && b.ub > 0) || (!b && ing.maxUsage > 0);
+    });
+  }, [ingredients, animal]);
+
+  // Effective selected keys (auto = all available, manual = user selection)
+  const effectiveSelectedKeys = useMemo(() => {
+    if (ingredientSelectionMode === "auto" || selectedIngredients.size === 0) {
+      return new Set(availableIngredients.map((ing) => ing.key));
+    }
+    return selectedIngredients;
+  }, [ingredientSelectionMode, selectedIngredients, availableIngredients]);
+
+  // Selected ingredient objects for formulation
+  const selectedIngredientObjects = useMemo(() => {
+    return ingredients.filter((ing) => effectiveSelectedKeys.has(ing.key));
+  }, [ingredients, effectiveSelectedKeys]);
 
   // Wrappers that reset manual mode when scenario inputs change.
   const handleWeightChange = (v: number) => {
@@ -98,14 +124,14 @@ export function CalculatorScreen() {
   };
 
   const lpResult = useMemo(
-    () => formulateRation({ animalKey, weight, production, prices, mode, flockSize, ingredients }),
-    [animalKey, weight, production, prices, mode, flockSize, ingredients]
+    () => formulateRation({ animalKey, weight, production, prices, mode, flockSize, ingredients: selectedIngredientObjects }),
+    [animalKey, weight, production, prices, mode, flockSize, selectedIngredientObjects]
   );
 
   // Balanced baseline for savings + diff comparison.
   const balancedResult = useMemo(
-    () => formulateRation({ animalKey, weight, production, prices, mode: "balanced", flockSize, ingredients }),
-    [animalKey, weight, production, prices, flockSize, ingredients]
+    () => formulateRation({ animalKey, weight, production, prices, mode: "balanced", flockSize, ingredients: selectedIngredientObjects }),
+    [animalKey, weight, production, prices, flockSize, selectedIngredientObjects]
   );
 
   // Reset manual mode when scenario inputs change (not prices).
@@ -114,13 +140,9 @@ export function CalculatorScreen() {
   // Enable manual mode: snapshot current LP result into editable percents.
   const enableManual = () => {
     const snap: Record<string, number> = {};
-    for (const ing of ingredients) {
-      const b = animal.bounds[ing.key];
-      const available = (b && b.ub > 0) || (!b && ing.maxUsage > 0);
-      if (available) {
-        const c = lpResult.components.find((c) => c.ingredient.key === ing.key);
-        snap[ing.key] = c ? +c.percent.toFixed(1) : 0;
-      }
+    for (const ing of selectedIngredientObjects) {
+      const c = lpResult.components.find((c) => c.ingredient.key === ing.key);
+      snap[ing.key] = c ? +c.percent.toFixed(1) : 0;
     }
     setManualPercents(snap);
     setManualMode(true);
@@ -147,7 +169,7 @@ export function CalculatorScreen() {
         prices,
         mode,
         flockSize,
-        ingredients,
+        ingredients: selectedIngredientObjects,
         lockedPercents,
         activeKeys,
       });
@@ -163,11 +185,11 @@ export function CalculatorScreen() {
           fiberMax: animal.targets.fiberMax,
         },
         flockSize,
-        ingredients
+        selectedIngredientObjects
       );
     }
     return lpResult;
-  }, [manualMode, manualPercents, lpResult, prices, animal.targets, flockSize, ingredients, autoBalance, lockedKeys, animalKey, weight, production, mode]);
+  }, [manualMode, manualPercents, lpResult, prices, animal.targets, flockSize, selectedIngredientObjects, autoBalance, lockedKeys, animalKey, weight, production, mode]);
 
   // Sync manualPercents with auto-balance result so sliders/inputs update
   useEffect(() => {
@@ -441,12 +463,89 @@ export function CalculatorScreen() {
         </CardContent>
       </Card>
 
+      {/* Ingredient Selection */}
+      <Card className="border-primary/30">
+        <CardContent className="space-y-3 p-4">
+          <SectionLabel n={lang === "ar" ? "٣" : "3"} title={lang === "ar" ? "اختيار المواد الخام" : "Select Ingredients"} />
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setIngredientSelectionMode("auto")}
+              className={cn(
+                "rounded-lg border-2 px-3 py-2.5 text-xs font-bold transition-all",
+                ingredientSelectionMode === "auto" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"
+              )}
+            >
+              {lang === "ar" ? "تلقائي" : "Automatic"}
+              <span className="mt-0.5 block text-[10px] font-normal opacity-80">{lang === "ar" ? "النظام يختار الأفضل" : "System picks best"}</span>
+            </button>
+            <button
+              onClick={() => setIngredientSelectionMode("manual")}
+              className={cn(
+                "rounded-lg border-2 px-3 py-2.5 text-xs font-bold transition-all",
+                ingredientSelectionMode === "manual" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"
+              )}
+            >
+              {lang === "ar" ? "يدوي" : "Manual"}
+              <span className="mt-0.5 block text-[10px] font-normal opacity-80">{lang === "ar" ? "أختار بنفسي" : "I choose"}</span>
+            </button>
+          </div>
+
+          {ingredientSelectionMode === "manual" && (
+            <div className="space-y-2">
+              {CATEGORY_ORDER.map((cat) => {
+                const catItems = availableIngredients.filter((ing) => ing.category === cat);
+                if (catItems.length === 0) return null;
+                return (
+                  <div key={cat}>
+                    <p className="mb-1 text-xs font-bold text-primary">{CATEGORY_LABELS[cat]}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {catItems.map((ing) => {
+                        const isSelected = selectedIngredients.has(ing.key);
+                        return (
+                          <button
+                            key={ing.key}
+                            onClick={() => {
+                              setSelectedIngredients((prev) => {
+                                const next = new Set(prev);
+                                if (next.has(ing.key)) next.delete(ing.key);
+                                else next.add(ing.key);
+                                return next;
+                              });
+                            }}
+                            className={cn(
+                              "flex items-center gap-1 rounded-lg border-2 px-2 py-1 text-[11px] font-bold transition-all",
+                              isSelected ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/30"
+                            )}
+                          >
+                            <span>{ing.emoji}</span>
+                            {lang === "ar" ? ing.name : ing.nameEn}
+                            {isSelected && <span>✓</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              <p className="text-[10px] text-muted-foreground">
+                {lang === "ar" ? `المختار: ${selectedIngredients.size} مادة` : `Selected: ${selectedIngredients.size} items`}
+              </p>
+            </div>
+          )}
+          {ingredientSelectionMode === "auto" && (
+            <p className="text-[11px] text-muted-foreground">
+              {lang === "ar" ? `${availableIngredients.length} مادة متاحة — سيتم استخدامها تلقائياً` : `${availableIngredients.length} ingredients available — all will be used`}
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Cost optimizer */}
       <Card className="border-accent/40">
         <CardContent className="space-y-3 p-4">
           <div className="flex items-center gap-2">
             <PiggyBank className="h-4 w-4 text-accent-foreground" />
-            <SectionLabel n={lang === "ar" ? "٣" : "3"} title={t("calc.s3.title")} inline />
+            <SectionLabel n={lang === "ar" ? "٤" : "4"} title={t("calc.s3.title")} inline />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -494,7 +593,7 @@ export function CalculatorScreen() {
                 <Sparkles className="h-3 w-3" /> {t("calc.diff_label")}
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {ingredients.map((ing) => {
+                {selectedIngredientObjects.map((ing) => {
                   const bal = balancedResult.components.find((c) => c.ingredient.key === ing.key)?.percent ?? 0;
                   const eco = lpResult.components.find((c) => c.ingredient.key === ing.key)?.percent ?? 0;
                   const diff = +(eco - bal).toFixed(1);
@@ -523,7 +622,7 @@ export function CalculatorScreen() {
         <CardContent className="p-4">
           <div className="mb-2 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <SectionLabel n={lang === "ar" ? "٤" : "4"} title={t("calc.s4.title")} inline />
+              <SectionLabel n={lang === "ar" ? "٥" : "5"} title={t("calc.s4.title")} inline />
               <Badge variant="outline" className="gap-1 text-[10px] font-bold">
                 <Coins className="h-3 w-3" />
                 {lang === "ar" ? activeProfile.name : activeProfile.nameEn}
@@ -536,10 +635,7 @@ export function CalculatorScreen() {
             )}
           </div>
           <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-            {ingredients.filter((ing) => {
-              const b = animal.bounds[ing.key];
-              return (b && b.ub > 0) || (!b && ing.maxUsage > 0);
-            }).map((ing) => {
+            {selectedIngredientObjects.map((ing) => {
               const ingShort = lang === "ar" ? ing.name : ing.nameEn;
               return (
                 <div
@@ -609,11 +705,8 @@ export function CalculatorScreen() {
             percents={manualPercents}
             onChange={(k, v) => setManualPercents((p) => ({ ...p, [k]: v }))}
             result={displayResult}
-            availableKeys={ingredients.filter((ing) => {
-              const b = animal.bounds[ing.key];
-              return (b && b.ub > 0) || (!b && ing.maxUsage > 0);
-            }).map((ing) => ing.key)}
-            ingredients={ingredients}
+            availableKeys={selectedIngredientObjects.map((ing) => ing.key)}
+            ingredients={selectedIngredientObjects}
             prices={prices}
             onSave={handleSave}
             onShare={handleShare}
