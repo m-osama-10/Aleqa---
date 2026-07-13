@@ -861,7 +861,6 @@ function ManualEditor({
                   value={pct}
                   onChange={(e) => onChange(k, Number(e.target.value))}
                   className="mt-2 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-secondary accent-primary"
-                  style={{ accentColor: ing.color }}
                 />
               </div>
           ))}
