@@ -7,15 +7,3 @@ android/
 *.log
 .DS_Store
 .env
-.env.local
-.env.*.local
-google-services.json
-GoogleService-Info.plist
-*.keystore
-*.jks
-*.p8
-*.p12
-*.mobileprovision
-*.orig.*
-eas-build-local-nodejs/
-coverage/

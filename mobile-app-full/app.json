@@ -1,0 +1,93 @@
+{
+  "expo": {
+    "name": "Alieqa",
+    "slug": "aleqa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "scheme": "alieqa",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2E7D4F"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.alieqa",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleLocalizations": [
+          "ar",
+          "en"
+        ],
+        "CFBundleDevelopmentRegion": "ar",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "associatedDomains": []
+    },
+    "android": {
+      "package": "app.alieqa",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2E7D4F"
+      },
+      "permissions": [
+        "INTERNET",
+        "VIBRATE",
+        "POST_NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#2E7D4F",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": true
+        }
+      ],
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 24,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35
+          },
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5987c9e9-1ec3-4c7d-a064-42b1c1a7b8ce"
+      },
+      "supabaseUrl": "https://lepdythxcdurjwncxnnt.supabase.co",
+      "supabasePublishableKey": "sb_publishable_nWluULZyJ-hU3f42jd0mbg_8iNXWxkp"
+    },
+    "owner": "osadevs-team",
+    "locales": {
+      "ar": "./locales/ar.json",
+      "en": "./locales/en.json"
+    }
+  }
+}
