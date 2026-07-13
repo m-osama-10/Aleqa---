@@ -53,8 +53,8 @@ export function CalculatorScreenMobile() {
   const { ingredients } = useIngredients();
 
   const numLocale = lang === "ar" ? "ar-EG" : "en-GB";
-  const fmt = (n: number, d = 2) =>
-    n.toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmt = (n: number | undefined | null, d = 2) =>
+    (n ?? 0).toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
   const [animalKey, setAnimalKey] = useState<AnimalKey>("dairy_cow");
   const [weight, setWeight] = useState(ANIMALS.dairy_cow.defaultWeight);
@@ -964,8 +964,8 @@ function ManualEditor({
 }: ManualEditorProps) {
   const { t, lang } = useLang();
   const numLocale = lang === "ar" ? "ar-EG" : "en-GB";
-  const fmt = (n: number, d = 2) =>
-    n.toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmt = (n: number | undefined | null, d = 2) =>
+    (n ?? 0).toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
   // Build ingredient map
   const ingMap: Record<string, import("@/lib/ingredient-db").IngredientNutrition> = {};

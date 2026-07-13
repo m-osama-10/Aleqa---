@@ -73,8 +73,8 @@ export function RationsScreen() {
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
   const numLocale = lang === "ar" ? "ar-EG" : "en-GB";
-  const fmt = (n: number, d = 2) =>
-    n.toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmt = (n: number | undefined | null, d = 2) =>
+    (n ?? 0).toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
   /* ----------------------------------------------------------------
    *  Cost-trend groups: rations of the same animalKey with ≥2 entries.

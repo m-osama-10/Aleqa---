@@ -53,8 +53,8 @@ export function RationResult({
 }: RationResultProps) {
   const { t, lang } = useLang();
   const isBird = flockUnit === "طائر" || flockUnit === "bird";
-  const fmt = (n: number, d = 2) =>
-    n.toLocaleString(lang === "ar" ? "ar-EG" : "en-GB", {
+  const fmt = (n: number | undefined | null, d = 2) =>
+    (n ?? 0).toLocaleString(lang === "ar" ? "ar-EG" : "en-GB", {
       minimumFractionDigits: d,
       maximumFractionDigits: d,
     });
@@ -154,7 +154,7 @@ export function RationResult({
                 <span className="text-xs text-muted-foreground">{t("common.egp")}</span>
               </p>
               <p className="text-[10px] text-muted-foreground">
-                {fmt(result.costPerTon || 0)} {t("common.egp")}/{lang === "ar" ? "طن" : "ton"}
+                {fmt(result.costPerTon)} {t("common.egp")}/{lang === "ar" ? "طن" : "ton"}
               </p>
             </>
           )}
@@ -409,8 +409,8 @@ export function rationToText(
   const isBird = flockUnit === "طائر" || flockUnit === "bird";
   const tr = (key: string) => SHARE_DICT[lang][key] ?? SHARE_DICT.ar[key] ?? key;
   const numLocale = lang === "ar" ? "ar-EG" : "en-GB";
-  const fmt = (n: number, d = 2) =>
-    n.toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmt = (n: number | undefined | null, d = 2) =>
+    (n ?? 0).toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
   const lines: string[] = [];
   lines.push(`🌿 *${tr("share.brand")}*`);

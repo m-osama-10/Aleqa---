@@ -144,8 +144,8 @@ export function printRationReport(params: ReportParams) {
   const flockUnit = lang === "ar" ? animal.flockUnit : animal.flockUnitEn;
   const isBird = animal.flockUnit === "طائر";
   const numLocale = lang === "ar" ? "ar-EG" : "en-GB";
-  const fmt = (n: number, d = 2) =>
-    n.toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmt = (n: number | undefined | null, d = 2) =>
+    (n ?? 0).toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
   const htmlLang = lang === "ar" ? "ar" : "en";
   const htmlDir = lang === "ar" ? "rtl" : "ltr";
   const dateStr = new Date().toLocaleDateString(numLocale, {
