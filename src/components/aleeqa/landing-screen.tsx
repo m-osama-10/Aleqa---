@@ -102,12 +102,6 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
       </header>
 
       <main className="flex-1">
-        {/* Top leaderboard ad */}
-        <div className="border-b border-border/40 bg-muted/20 py-2">
-          <div className="mx-auto flex max-w-5xl justify-center px-4">
-            <AdSlot placement="leaderboard" />
-          </div>
-        </div>
         {/* Global social bar (injected once) */}
         <AdSocialBar />
         {/* Hero */}
