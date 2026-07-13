@@ -168,7 +168,7 @@ export function printRationReport(params: ReportParams) {
       const ingName = lang === "ar" ? ing.name : ing.nameEn;
       return `<tr>
         <td class="num">${i + 1}</td>
-        <td><span class="dot" style="background:${ing.color}"></span>${ingName}</td>
+        <td><span class="dot" style="background:${(ing as any).color || "#888"}"></span>${ingName}</td>
         <td class="num">${fmt(c.percent, 1)}%</td>
         <td class="num">${fmt(c.kg, 2)} ${tr("report.kg_unit")}</td>
         <td class="num">${fmt(ing.protein, 1)}%</td>

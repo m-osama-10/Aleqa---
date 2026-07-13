@@ -75,9 +75,9 @@ export function RationResult({
   }
 
   const chartData = result.components.map((c) => ({
-    name: lang === "ar" ? c.ingredient.short : c.ingredient.shortEn,
+    name: lang === "ar" ? (c.ingredient as any).short || c.ingredient.name : (c.ingredient as any).shortEn || c.ingredient.nameEn,
     value: c.percent,
-    color: c.ingredient.color,
+    color: (c.ingredient as any).color || "#888",
   }));
 
   return (
@@ -199,8 +199,9 @@ export function RationResult({
           <p className="mb-2 text-sm font-bold text-foreground/80">{t("result.components_title")}</p>
           <div className={cn("space-y-2", !compact && "max-h-80 overflow-y-auto scroll-aleeqa pe-1")}>
             {result.components.map((c) => {
-              const Icon = c.ingredient.icon;
               const ingName = lang === "ar" ? c.ingredient.name : c.ingredient.nameEn;
+              const emoji = (c.ingredient as any).emoji || "🧪";
+              const color = (c.ingredient as any).color || "#888";
               return (
                 <div
                   key={c.ingredient.key}
@@ -209,10 +210,9 @@ export function RationResult({
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span
-                        className="flex h-7 w-7 items-center justify-center rounded-md text-white"
-                        style={{ backgroundColor: c.ingredient.color }}
+                        className="flex h-7 w-7 items-center justify-center rounded-md bg-secondary text-base"
                       >
-                        <Icon className="h-3.5 w-3.5" />
+                        {emoji}
                       </span>
                       <div>
                         <p className="text-xs font-bold text-foreground">{ingName}</p>
@@ -234,7 +234,7 @@ export function RationResult({
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
                       <div
                         className="h-full rounded-full"
-                        style={{ width: `${c.percent}%`, backgroundColor: c.ingredient.color }}
+                        style={{ width: `${c.percent}%`, backgroundColor: color }}
                       />
                     </div>
                     <span className="w-10 text-left text-[10px] font-bold tabular-nums text-muted-foreground">
