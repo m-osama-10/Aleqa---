@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "scheme": "alieqa",
     "splash": {
       "image": "./assets/splash.png",
@@ -85,12 +85,6 @@
       "supabasePublishableKey": "sb_publishable_nWluULZyJ-hU3f42jd0mbg_8iNXWxkp"
     },
     "owner": "osadevs-team",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/alieqa-mobile"
-    },
     "locales": {
       "ar": "./locales/ar.json",
       "en": "./locales/en.json"
