@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import {
-  Coins,
   RotateCcw,
   Search,
   ChevronDown,
   ChevronUp,
   Beaker,
-  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -54,15 +52,15 @@ export function PricesScreen() {
                 {isRtl ? "القيم الغذائية للمواد الخام" : "Ingredient Nutrition Values"}
               </h2>
             </div>
-            <Button size="sm" variant="outline" className="gap-1.5" onClick={handleReset}>
+            <Button size="sm" variant="outline" className="gap-1.5 shrink-0" onClick={handleReset}>
               <RotateCcw className="h-3.5 w-3.5" />
-              {isRtl ? "إعادة ضبط" : "Reset"}
+              <span className="hidden sm:inline">{isRtl ? "إعادة ضبط" : "Reset"}</span>
             </Button>
           </div>
           <p className="text-[11px] leading-relaxed text-muted-foreground">
             {isRtl
-              ? "كل القيم قابلة للتعديل. عدّلها حسب نتائج التحليل المعملي أو الشركة المنتجة. يتم إعادة الحساب فوراً."
-              : "All values are editable. Adjust based on lab analysis or manufacturer data. Recalculation is instant."}
+              ? "كل القيم قابلة للتعديل. اضغط على أي مادة لتعديل قيمها الغذائية والسعر."
+              : "All values are editable. Tap any ingredient to edit its nutrition values and price."}
           </p>
         </CardContent>
       </Card>
@@ -84,100 +82,103 @@ export function PricesScreen() {
         if (catItems.length === 0) return null;
         return (
           <div key={cat}>
-            <div className="mb-2 flex items-center gap-2">
-              <h3 className="text-sm font-bold text-foreground">
+            {/* Category header */}
+            <div className="mb-2 flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2">
+              <span className="text-sm font-extrabold text-primary">
                 {CATEGORY_LABELS[cat]}
-              </h3>
+              </span>
               <Badge variant="secondary" className="text-[10px]">
                 {catItems.length}
               </Badge>
             </div>
 
+            {/* Ingredient cards */}
             <div className="space-y-2">
               {catItems.map((ing) => {
                 const isExpanded = expandedKey === ing.key;
+                const currentPrice = prices[ing.key] ?? ing.price;
                 return (
-                  <Card key={ing.key} className="border-border/60">
+                  <Card key={ing.key} className={cn("border-border/60 transition-colors", isExpanded && "border-primary/40")}>
                     <CardContent className="p-3">
-                      {/* Compact row — always visible */}
+                      {/* Row 1: emoji + name + price + expand button */}
                       <button
                         onClick={() => setExpandedKey(isExpanded ? null : ing.key)}
-                        className="flex w-full items-center gap-3 text-right"
+                        className="flex w-full items-center gap-2 text-right"
                       >
-                        <span className="text-xl">{ing.emoji}</span>
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-lg">
+                          {ing.emoji}
+                        </span>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-bold text-foreground">
+                          <p className="text-sm font-bold text-foreground leading-tight">
                             {isRtl ? ing.name : ing.nameEn}
                           </p>
-                          <div className="mt-0.5 flex flex-wrap gap-2 text-[10px] text-muted-foreground">
-                            <span className="font-semibold text-primary">CP: {ing.protein}%</span>
-                            <span>TDN: {ing.tdn}%</span>
-                            <span>CF: {ing.fiber}%</span>
-                          </div>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            CP: {ing.protein}% · TDN: {ing.tdn}% · CF: {ing.fiber}%
+                          </p>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs font-bold text-foreground">
-                            {prices[ing.key] ?? ing.price} {isRtl ? "ج" : "EGP"}
+                        <div className="flex shrink-0 items-center gap-1.5">
+                          <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-extrabold text-primary">
+                            {currentPrice} {isRtl ? "ج" : "EGP"}
                           </span>
                           {isExpanded ? (
-                            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                            <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
                           ) : (
-                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
                           )}
                         </div>
                       </button>
 
-                      {/* Expanded editor — all nutrition fields */}
+                      {/* Expanded editor */}
                       {isExpanded && (
                         <div className="mt-3 space-y-3 border-t border-border/40 pt-3">
                           {/* Price */}
                           <FieldRow
                             label={isRtl ? "السعر (جنيه/كجم)" : "Price (EGP/kg)"}
-                            icon={<DollarSign className="h-3.5 w-3.5" />}
-                            value={prices[ing.key] ?? ing.price}
+                            value={currentPrice}
                             onChange={(v) => updatePrice(ing.key as never, v)}
                             step={0.5}
                           />
 
+                          {/* Nutrition grid */}
                           <div className="grid grid-cols-2 gap-2">
                             <FieldRow
-                              label={isRtl ? "البروتين الخام (CP %)" : "Crude Protein (CP %)"}
+                              label={isRtl ? "بروتين (CP%)" : "Protein (CP%)"}
                               value={ing.protein}
                               onChange={(v) => updateIngredient(ing.key, "protein", v)}
                               step={0.1}
                             />
                             <FieldRow
-                              label={isRtl ? "الطاقة (TDN %)" : "Energy (TDN %)"}
+                              label={isRtl ? "طاقة (TDN%)" : "Energy (TDN%)"}
                               value={ing.tdn}
                               onChange={(v) => updateIngredient(ing.key, "tdn", v)}
                               step={0.1}
                             />
                             <FieldRow
-                              label={isRtl ? "الألياف الخام (CF %)" : "Crude Fiber (CF %)"}
+                              label={isRtl ? "ألياف (CF%)" : "Fiber (CF%)"}
                               value={ing.fiber}
                               onChange={(v) => updateIngredient(ing.key, "fiber", v)}
                               step={0.1}
                             />
                             <FieldRow
-                              label={isRtl ? "الدهون (EE %)" : "Ether Extract (EE %)"}
+                              label={isRtl ? "دهون (EE%)" : "Fat (EE%)"}
                               value={ing.fat}
                               onChange={(v) => updateIngredient(ing.key, "fat", v)}
                               step={0.1}
                             />
                             <FieldRow
-                              label={isRtl ? "الكالسيوم (Ca %)" : "Calcium (Ca %)"}
+                              label={isRtl ? "كالسيوم (Ca%)" : "Calcium (Ca%)"}
                               value={ing.calcium}
                               onChange={(v) => updateIngredient(ing.key, "calcium", v)}
                               step={0.01}
                             />
                             <FieldRow
-                              label={isRtl ? "الفوسفور (P %)" : "Phosphorus (P %)"}
+                              label={isRtl ? "فوسفور (P%)" : "Phosphorus (P%)"}
                               value={ing.phosphorus}
                               onChange={(v) => updateIngredient(ing.key, "phosphorus", v)}
                               step={0.01}
                             />
                             <FieldRow
-                              label={isRtl ? "المادة الجافة (DM %)" : "Dry Matter (DM %)"}
+                              label={isRtl ? "مادة جافة (DM%)" : "Dry Matter (DM%)"}
                               value={ing.dryMatter}
                               onChange={(v) => updateIngredient(ing.key, "dryMatter", v)}
                               step={0.1}
@@ -189,13 +190,13 @@ export function PricesScreen() {
                               isText
                             />
                             <FieldRow
-                              label={isRtl ? "الحد الأدنى (%)" : "Min Usage (%)"}
+                              label={isRtl ? "أدنى استخدام (%)" : "Min Usage (%)"}
                               value={ing.minUsage}
                               onChange={(v) => updateIngredient(ing.key, "minUsage", v)}
                               step={0.5}
                             />
                             <FieldRow
-                              label={isRtl ? "الحد الأقصى (%)" : "Max Usage (%)"}
+                              label={isRtl ? "أقصى استخدام (%)" : "Max Usage (%)"}
                               value={ing.maxUsage}
                               onChange={(v) => updateIngredient(ing.key, "maxUsage", v)}
                               step={0.5}
@@ -214,8 +215,8 @@ export function PricesScreen() {
 
       <p className="rounded-lg bg-primary/5 p-3 text-center text-[11px] leading-relaxed text-muted-foreground">
         {isRtl
-          ? "💡 كل القيم محفوظة على جهازك. عدّلها حسب تحليلك المعملي. تُستخدم القيم المعدلة فوراً في كل الحسابات."
-          : "💡 All values are stored locally. Adjust to your lab analysis. Modified values are used immediately in all calculations."}
+          ? "💡 كل القيم محفوظة على جهازك. عدّلها حسب تحليلك المعملي."
+          : "💡 All values stored locally. Adjust to your lab analysis."}
       </p>
 
       <AdSection placement="in-feed" label="إعلان" />
@@ -231,22 +232,17 @@ function FieldRow({
   value,
   onChange,
   step = 0.1,
-  icon,
   isText = false,
 }: {
   label: string;
   value: number | string;
   onChange: (v: number) => void;
   step?: number;
-  icon?: React.ReactNode;
   isText?: boolean;
 }) {
   return (
     <div className="space-y-1">
-      <Label className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground">
-        {icon}
-        {label}
-      </Label>
+      <Label className="text-[10px] font-bold text-muted-foreground">{label}</Label>
       <Input
         type={isText ? "text" : "number"}
         step={step}

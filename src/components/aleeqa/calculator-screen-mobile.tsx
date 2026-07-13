@@ -117,10 +117,16 @@ export function CalculatorScreenMobile() {
 
   // Enable manual mode: snapshot current LP result into editable percents.
   const enableManual = () => {
+    // Snapshot ALL available ingredients (not just the LP result)
+    // so the user can lock/unlock any of them
     const snap: Record<string, number> = {};
-    for (const c of lpResult.components) {
-      // use c directly
-      snap[c.ingredient.key] = +c.percent.toFixed(1);
+    for (const ing of ingredients) {
+      const b = animal.bounds[ing.key];
+      const available = (b && b.ub > 0) || (!b && ing.maxUsage > 0);
+      if (available) {
+        const c = lpResult.components.find((c) => c.ingredient.key === ing.key);
+        snap[ing.key] = c ? +c.percent.toFixed(1) : 0;
+      }
     }
     setManualPercents(snap);
     setManualMode(true);
@@ -133,12 +139,14 @@ export function CalculatorScreenMobile() {
 
   // The result to display: manual override if active, else LP.
   const displayResult = useMemo(() => {
-    if (manualMode && autoBalance && lockedKeys.size > 0) {
+    if (manualMode && autoBalance) {
+      // Smart balancing: locked ingredients stay fixed, others adjust
       const lockedPercents: Record<string, number> = {};
       for (const k of lockedKeys) {
         lockedPercents[k] = manualPercents[k] ?? 0;
       }
-      const activeKeys = Object.keys(manualPercents).filter((k) => manualPercents[k] > 0);
+      // Active keys = all ingredients in manualPercents (including 0% ones)
+      const activeKeys = Object.keys(manualPercents);
       return formulateRationWithLocks({
         animalKey, weight, production, prices, mode, flockSize, ingredients,
         lockedPercents, activeKeys,

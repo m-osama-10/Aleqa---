@@ -114,8 +114,13 @@ export function CalculatorScreen() {
   // Enable manual mode: snapshot current LP result into editable percents.
   const enableManual = () => {
     const snap: Record<string, number> = {};
-    for (const c of lpResult.components) {
-      snap[c.ingredient.key] = +c.percent.toFixed(1);
+    for (const ing of ingredients) {
+      const b = animal.bounds[ing.key];
+      const available = (b && b.ub > 0) || (!b && ing.maxUsage > 0);
+      if (available) {
+        const c = lpResult.components.find((c) => c.ingredient.key === ing.key);
+        snap[ing.key] = c ? +c.percent.toFixed(1) : 0;
+      }
     }
     setManualPercents(snap);
     setManualMode(true);
@@ -128,7 +133,7 @@ export function CalculatorScreen() {
 
   // The result to display: manual override if active, else LP.
   const displayResult = useMemo(() => {
-    if (manualMode && autoBalance && lockedKeys.size > 0) {
+    if (manualMode && autoBalance) {
       // Smart balancing: locked ingredients stay fixed, others adjust
       const lockedPercents: Record<string, number> = {};
       for (const k of lockedKeys) {
