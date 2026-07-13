@@ -967,6 +967,18 @@ function ManualEditor({
   const fmt = (n: number | undefined | null, d = 2) =>
     (n ?? 0).toLocaleString(numLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
+  // Defensive: ensure result has all required fields
+  const safeResult = {
+    ...result,
+    achieved: result?.achieved ?? { cp: 0, tdn: 0, fiber: 0 },
+    targets: result?.targets ?? { cpMin: 0, tdnMin: 0, fiberMax: 0 },
+    components: result?.components ?? [],
+    dmi: result?.dmi ?? 0,
+    totalCost: result?.totalCost ?? 0,
+    feasible: result?.feasible ?? false,
+    warnings: result?.warnings ?? [],
+  };
+
   // Build ingredient map
   const ingMap: Record<string, import("@/lib/ingredient-db").IngredientNutrition> = {};
   for (const ing of ingredients) ingMap[ing.key] = ing;
@@ -976,14 +988,14 @@ function ManualEditor({
 
   // Memoize component rows — include original LP % for diff display
   const lpPercents: Record<string, number> = {};
-  for (const c of result.components) {
+  for (const c of safeResult.components) {
     lpPercents[c.ingredient.key] = c.percent;
   }
 
   const rows = availableKeys.map((k) => {
     const ing = ingMap[k];
     const pct = percents[k] ?? 0;
-    const kg = +((pct / 100) * result.dmi).toFixed(3);
+    const kg = +((pct / 100) * safeResult.dmi).toFixed(3);
     const cost = +(kg * (prices[k] ?? ing?.price ?? 0)).toFixed(2);
     const ingName = lang === "ar" ? (ing?.name ?? k) : (ing?.nameEn ?? k);
     const emoji = ing?.emoji ?? "🧪";
@@ -1001,25 +1013,25 @@ function ManualEditor({
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           <MiniStat
             label={t("manual.protein")}
-            value={`${fmt(result.achieved.cp, 1)}%`}
-            ok={result.achieved.cp >= result.targets.cpMin - 0.3}
-            sub={`≥ ${fmt(result.targets.cpMin, 0)}%`}
+            value={`${fmt(safeResult.achieved.cp, 1)}%`}
+            ok={safeResult.achieved.cp >= safeResult.targets.cpMin - 0.3}
+            sub={`≥ ${fmt(safeResult.targets.cpMin, 0)}%`}
           />
           <MiniStat
             label={t("manual.energy")}
-            value={`${fmt(result.achieved.tdn, 1)}%`}
-            ok={result.achieved.tdn >= result.targets.tdnMin - 0.5}
-            sub={`≥ ${fmt(result.targets.tdnMin, 0)}%`}
+            value={`${fmt(safeResult.achieved.tdn, 1)}%`}
+            ok={safeResult.achieved.tdn >= safeResult.targets.tdnMin - 0.5}
+            sub={`≥ ${fmt(safeResult.targets.tdnMin, 0)}%`}
           />
           <MiniStat
             label={t("manual.fiber")}
-            value={`${fmt(result.achieved.fiber, 1)}%`}
-            ok={result.achieved.fiber <= result.targets.fiberMax + 0.5}
-            sub={`≤ ${fmt(result.targets.fiberMax, 0)}%`}
+            value={`${fmt(safeResult.achieved.fiber, 1)}%`}
+            ok={safeResult.achieved.fiber <= safeResult.targets.fiberMax + 0.5}
+            sub={`≤ ${fmt(safeResult.targets.fiberMax, 0)}%`}
           />
           <MiniStat
             label={t("manual.cost_day")}
-            value={`${fmt(result.totalCost, 0)}`}
+            value={`${fmt(safeResult.totalCost, 0)}`}
             sub={t("common.egp")}
           />
         </div>
