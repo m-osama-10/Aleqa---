@@ -483,8 +483,14 @@ export function useRations() {
         typeof crypto !== "undefined" && "randomUUID" in crypto
           ? crypto.randomUUID()
           : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      // EXPLICIT NORMALIZATION at the persistence boundary: guarantees the
+      // saved result is always complete, even if a future caller passes a
+      // raw/partial result. This is the single source of truth for what
+      // gets written to localStorage — migrateRation normalizes on read,
+      // this normalizes on write, so the data is always consistent.
       const full: SavedRation = {
         ...ration,
+        result: normalizeFormulationResult(ration.result),
         id,
         createdAt: new Date().toISOString(),
       };

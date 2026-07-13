@@ -1074,9 +1074,9 @@ function ManualEditor({
         </div>
 
         {/* Auto-balance warnings */}
-        {autoBalance && result.warnings.length > 0 && (
+        {autoBalance && safeResult.warnings.length > 0 && (
           <div className="rounded-lg border border-amber-400/50 bg-amber-50 p-2.5">
-            {result.warnings.map((w, i) => (<p key={i} className="text-[10px] font-medium text-amber-800">{w}</p>))}
+            {safeResult.warnings.map((w, i) => (<p key={i} className="text-[10px] font-medium text-amber-800">{w}</p>))}
           </div>
         )}
 
@@ -1135,9 +1135,9 @@ function ManualEditor({
           })}
         </div>
 
-        {result.warnings.length > 0 && (
+        {safeResult.warnings.length > 0 && (
           <div className="rounded-lg border border-amber-400/40 bg-amber-50/70 p-2.5">
-            {result.warnings.map((w, i) => (
+            {safeResult.warnings.map((w, i) => (
               <p key={i} className="flex items-start gap-1.5 text-[11px] text-amber-800">
                 <Info className="mt-0.5 h-3 w-3 shrink-0" />
                 {w}

@@ -78,3 +78,48 @@ Stage Summary:
 - normalizeFormulationResult() is now the single source of truth, used at every boundary: creation (formulators), loading (migrateRation), display (RationResult/ManualEditor), export (printRationReport/rationToText), comparison (ComparePanel)
 - All 8 modified files compile cleanly; only pre-existing lint error is SafeAppInner JSX-in-try-catch (page.tsx, unrelated)
 - Manual Mode verified working end-to-end via agent-browser — no crashes
+
+---
+Task ID: 11
+Agent: main (Z.ai Code)
+Task: Final production-readiness review — audit all FormulationResult create/read paths, verify saveRation normalizes, check external imports, find all direct result.* accesses, test legacy + save + compare + share scenarios.
+
+Work Log:
+- AUDIT: Searched all 8 files touching FormulationResult for direct `result.*` accesses:
+  * feed-lp.ts: 4 matches on `result.feasible` — these are LPResult (internal solver), NOT FormulationResult. SAFE.
+  * ration-report.ts: 20+ matches — ALL after `const result = normalizeFormulationResult(params.result)` at line 134. SAFE.
+  * i18n.tsx: 4 matches — i18n key names (strings), not property accesses. SAFE.
+  * storage.ts: 1 match (`r.result.flockSize`) — AFTER `r.result = normalizeFormulationResult(...)`. SAFE.
+  * rations-screen.tsx: 15 matches — `r.result.*` from useRations() (migrateRation normalizes at load); `a.result.*`/`b.result.*` normalized at lines 397-398. SAFE.
+  * calculator-screen-mobile.tsx + calculator-screen.tsx: found 8 direct `result.warnings` accesses (not via safeResult) in ManualEditor → FIXED to `safeResult.warnings`.
+  * ration-result.tsx: all accesses use `safeResult` (normalized at line 67 and 420). SAFE.
+
+- FIXED 3 remaining gaps:
+  1. saveRation (storage.ts): Added `result: normalizeFormulationResult(ration.result)` at the persistence boundary — guarantees saved rations are ALWAYS complete, even if a future caller passes a raw/partial result.
+  2. calculator-screen-mobile.tsx: Changed 4 `result.warnings` → `safeResult.warnings` in ManualEditor (auto-balance warnings + bottom warnings).
+  3. calculator-screen.tsx: Changed 4 `result.warnings` → `safeResult.warnings` in ManualEditor (same pattern).
+
+- EXTERNAL IMPORT AUDIT: Searched for JSON.parse, FileReader, Excel/XLSX, Supabase paths:
+  * Supabase history/favorites services use generic `payload: Record<string, unknown>` — do NOT type or access FormulationResult fields. Profile-screen only displays `h.name` and `h.created_at` from history. NO FormulationResult import path.
+  * No JSON file import, no Excel/XLSX import. The ONLY persistence path for FormulationResult is localStorage via saveRation/migrateRation, both of which now normalize.
+
+- VERIFICATION (agent-browser end-to-end with legacy data):
+  * TEST A — View legacy ration: Injected ration with `result.achieved=undefined` → clicked "عرض" → RationResult dialog opened showing "🐄 بقرة قديمة ناقصة" → NO TypeError, NO page errors. safeResult guard worked.
+  * TEST B — Share legacy ration: Clicked "مشاركة" on same legacy ration → rationToText executed → NO TypeError, NO ReferenceError. normalizeFormulationResult at function entry fixed both .cp crash AND old safeResult scoping bug.
+  * TEST C — ComparePanel with TWO legacy rations (original crash site): Injected 2 rations with achieved=undefined → clicked "مقارنة علقتين" → ComparePanel rendered showing both ration names → NO TypeError, NO crash. normalizeFormulationResult at lines 397-398 worked.
+  * TEST D — Save NEW ration: Saved from calculator → verified in localStorage: achieved={cp:14.999,tdn:71.949,fiber:17.36}, targets={cpMin:15,tdnMin:65,fiberMax:24}, feasible=true. saveRation's normalization worked — new rations are ALWAYS saved complete.
+
+Stage Summary:
+- ALL FormulationResult create/read paths now pass through normalizeFormulationResult():
+  * CREATION: 3 formulators (6 return paths) — normalized at return
+  * PERSISTENCE WRITE: saveRation — normalizes before writing to localStorage
+  * PERSISTENCE READ: migrateRation — normalizes when loading from localStorage
+  * DISPLAY: RationResult + ManualEditor (mobile + web) — normalize via safeResult
+  * EXPORT: printRationReport + rationToText — normalize at function entry
+  * COMPARISON: ComparePanel — normalizes both a and b at entry
+- NO external import paths (JSON/Excel/Supabase) bypass normalization
+- ALL direct result.* accesses verified safe (either after normalize call, on internal LPResult, or on migrateRation-normalized data)
+- 4 test scenarios passed: legacy View, legacy Share, legacy Compare (original crash site), new Save
+- ZERO TypeError, ZERO ReferenceError, ZERO page errors across all tests
+- Lint: only pre-existing SafeAppInner JSX-in-try-catch error (page.tsx, unrelated)
+- PRODUCTION READY ✓
