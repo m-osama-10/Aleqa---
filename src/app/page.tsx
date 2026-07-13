@@ -57,6 +57,24 @@ const useUIStore = create<UIState>((set) => ({
   setShowAdmin: (showAdmin) => set({ showAdmin }),
 }));
 
+function SafeAppInner() {
+  try {
+    return <AppInner />;
+  } catch (e) {
+    const err = e instanceof Error ? e : new Error(String(e));
+    console.error("[Alieqa Render Error]", err.message, err.stack);
+    return (
+      <div style={{ padding: 20, textAlign: "center", fontFamily: "sans-serif" }}>
+        <h2 style={{ color: "#2E7D4F" }}>حدث خطأ</h2>
+        <p style={{ color: "#666", fontSize: 14 }}>{err.message}</p>
+        <pre style={{ fontSize: 10, color: "#999", textAlign: "left", overflow: "auto" }}>
+{err.stack}
+        </pre>
+      </div>
+    );
+  }
+}
+
 function AppInner() {
   const entered = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const { user, isGuest } = useAuth();
@@ -152,7 +170,7 @@ export default function Home() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <AppInner />
+        <SafeAppInner />
       </LanguageProvider>
     </AuthProvider>
   );
