@@ -603,10 +603,10 @@ function subscribeLang(cb: () => void) {
   const onStorage = (e: StorageEvent) => {
     if (e.key === LANG_KEY) cb();
   };
-  window.addEventListener("storage", onStorage);
+  if (typeof window !== "undefined") window.addEventListener("storage", onStorage);
   return () => {
     listeners.delete(cb);
-    window.removeEventListener("storage", onStorage);
+    if (typeof window !== "undefined") window.removeEventListener("storage", onStorage);
   };
 }
 

@@ -24,10 +24,10 @@ function subscribe(listener: Listener) {
   const onStorage = (e: StorageEvent) => {
     if (e.key === null || e.key?.startsWith("aleeqa.")) listener();
   };
-  window.addEventListener("storage", onStorage);
+  if (typeof window !== "undefined") window.addEventListener("storage", onStorage);
   return () => {
     listeners.delete(listener);
-    window.removeEventListener("storage", onStorage);
+    if (typeof window !== "undefined") window.removeEventListener("storage", onStorage);
   };
 }
 

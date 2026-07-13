@@ -23,10 +23,10 @@ function subscribe(cb: () => void) {
       cb();
     }
   };
-  window.addEventListener("storage", onStorage);
+  if (typeof window !== "undefined") window.addEventListener("storage", onStorage);
   return () => {
     listeners.delete(cb);
-    window.removeEventListener("storage", onStorage);
+    if (typeof window !== "undefined") window.removeEventListener("storage", onStorage);
   };
 }
 function notify() {
