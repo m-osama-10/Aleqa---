@@ -30,6 +30,7 @@ function subscribe(cb: () => void) {
   };
 }
 function notify() {
+  enteredCache = null; // invalidate cache so getSnapshot reads fresh value
   listeners.forEach((l) => l());
 }
 function getSnapshot(): boolean {
