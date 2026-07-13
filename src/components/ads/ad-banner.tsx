@@ -47,10 +47,10 @@ export function AdBanner({ unitId, className = "" }: AdBannerProps) {
   return (
     <div
       className={`flex items-center justify-center overflow-hidden rounded-lg bg-muted/30 ${className}`}
-      style={{ width: "100%", maxWidth: unit.width, minHeight: unit.height }}
+      style={{ width: "100%", maxWidth: "100%", minHeight: unit.height }}
       aria-label="إعلان"
     >
-      <div ref={containerRef} style={{ width: unit.width, height: unit.height }} />
+      <div ref={containerRef} style={{ width: "100%", maxWidth: unit.width, height: unit.height }} />
     </div>
   );
 }

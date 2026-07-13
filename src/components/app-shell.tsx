@@ -117,13 +117,13 @@ export function AppShell({ onHome, onShowAuth, onShowAdmin }: AppShellProps) {
       <AdSocialBar />
       {/* Header leaderboard ad (728x90 desktop / 320x50 mobile) */}
       <div className="border-b border-border/40 bg-muted/20 py-2">
-        <div className="mx-auto flex max-w-3xl justify-center px-2">
+        <div className="mx-auto flex max-w-3xl w-full justify-center px-2">
           <AdSlot placement="header" />
         </div>
       </div>
       {/* App header */}
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between gap-3 px-4">
+        <div className="mx-auto flex h-14 max-w-3xl w-full items-center justify-between gap-3 px-4">
           <button onClick={() => setTab("calculator")} className="flex items-center gap-2">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm">
               <Leaf className="h-5 w-5" />
@@ -174,7 +174,7 @@ export function AppShell({ onHome, onShowAuth, onShowAdmin }: AppShellProps) {
       </header>
 
       {/* Content */}
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-24 pt-4">
+      <main className="mx-auto max-w-3xl w-full flex-1 px-4 pb-24 pt-4">
         {/* Auth gate banner — prompt guests to sign in */}
         {isGuest && tab !== "profile" && (
           <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-primary/30 bg-primary/5 p-3">
@@ -221,14 +221,14 @@ export function AppShell({ onHome, onShowAuth, onShowAdmin }: AppShellProps) {
       </main>
       {/* Footer banner ad */}
       <div className="border-t border-border/40 bg-muted/20 py-2">
-        <div className="mx-auto flex max-w-3xl justify-center px-2">
+        <div className="mx-auto flex max-w-3xl w-full justify-center px-2">
           <AdSlot placement="footer" />
         </div>
       </div>
 
       {/* Bottom navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/70 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]">
-        <div className="mx-auto flex max-w-3xl items-stretch justify-around px-2">
+        <div className="mx-auto flex max-w-3xl w-full items-stretch justify-around px-2">
           {TABS.map((tabDef) => {
             const Icon = tabDef.icon;
             const active = tab === tabDef.key;
