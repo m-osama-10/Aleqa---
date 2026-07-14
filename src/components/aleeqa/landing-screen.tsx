@@ -158,10 +158,9 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                   </Button>
                 </div>
 
-                <div className="mt-8 grid grid-cols-3 gap-2.5">
+                <div className="mt-8 grid grid-cols-2 gap-2.5">
                   <HeroStat value={lang === "ar" ? "٩" : "9"} label={t("landing.hero.stat_animals")} />
                   <HeroStat value={lang === "ar" ? "٢٢" : "22"} label={t("landing.hero.stat_ingredients")} />
-                  <HeroStat value={lang === "ar" ? "مجاني" : "Free"} label={t("landing.hero.stat_offline")} />
                 </div>
               </div>
 
@@ -223,15 +222,15 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <FeatureCard icon={Calculator} title={t("landing.features.f1.t")} desc={t("landing.features.f1.d")} />
-              <FeatureCard icon={Layers} title={t("landing.features.f2.t")} desc={t("landing.features.f2.d")} />
-              <FeatureCard icon={SlidersHorizontal} title={t("landing.features.f3.t")} desc={t("landing.features.f3.d")} />
-              <FeatureCard icon={Sparkles} title={t("landing.features.f4.t")} desc={t("landing.features.f4.d")} />
-              <FeatureCard icon={PiggyBank} title={t("landing.features.f5.t")} desc={t("landing.features.f5.d")} />
-              <FeatureCard icon={Coins} title={t("landing.features.f6.t")} desc={t("landing.features.f6.d")} />
-              <FeatureCard icon={GitCompare} title={t("landing.features.f7.t")} desc={t("landing.features.f7.d")} />
-              <FeatureCard icon={Share2} title={t("landing.features.f8.t")} desc={t("landing.features.f8.d")} />
-              <FeatureCard icon={FileText} title={t("landing.features.f9.t")} desc={t("landing.features.f9.d")} />
+              <FeatureCard icon={Calculator} title={t("landing.features.f1.t")} desc={t("landing.features.f1.d")} color="primary" />
+              <FeatureCard icon={Layers} title={t("landing.features.f2.t")} desc={t("landing.features.f2.d")} color="blue" />
+              <FeatureCard icon={SlidersHorizontal} title={t("landing.features.f3.t")} desc={t("landing.features.f3.d")} color="amber" />
+              <FeatureCard icon={Sparkles} title={t("landing.features.f4.t")} desc={t("landing.features.f4.d")} color="emerald" />
+              <FeatureCard icon={PiggyBank} title={t("landing.features.f5.t")} desc={t("landing.features.f5.d")} color="emerald" />
+              <FeatureCard icon={Coins} title={t("landing.features.f6.t")} desc={t("landing.features.f6.d")} color="amber" />
+              <FeatureCard icon={GitCompare} title={t("landing.features.f7.t")} desc={t("landing.features.f7.d")} color="purple" />
+              <FeatureCard icon={Share2} title={t("landing.features.f8.t")} desc={t("landing.features.f8.d")} color="rose" />
+              <FeatureCard icon={FileText} title={t("landing.features.f9.t")} desc={t("landing.features.f9.d")} color="primary" />
             </div>
           </div>
         </section>
@@ -723,16 +722,26 @@ function FeatureCard({
   icon: Icon,
   title,
   desc,
+  color = "primary",
 }: {
   icon: typeof Calculator;
   title: string;
   desc: string;
+  color?: "primary" | "amber" | "emerald" | "purple" | "blue" | "rose";
 }) {
+  const colorMap = {
+    primary: "from-primary/15 to-primary/5 text-primary",
+    amber: "from-amber-500/15 to-amber-500/5 text-amber-600",
+    emerald: "from-emerald-500/15 to-emerald-500/5 text-emerald-600",
+    purple: "from-purple-500/15 to-purple-500/5 text-purple-600",
+    blue: "from-blue-500/15 to-blue-500/5 text-blue-600",
+    rose: "from-rose-500/15 to-rose-500/5 text-rose-600",
+  };
   return (
     <Card className="group border-border/60 transition-all hover:border-primary/40 hover:shadow-md">
       <CardContent className="p-4">
         <div className="mb-2 flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary transition-transform group-hover:scale-110">
+          <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${colorMap[color]} transition-transform group-hover:scale-110`}>
             <Icon className="h-5 w-5" />
           </span>
         </div>
