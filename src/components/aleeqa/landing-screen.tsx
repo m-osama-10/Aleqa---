@@ -224,11 +224,11 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <FeatureCard icon={Calculator} title={t("landing.features.f1.t")} desc={t("landing.features.f1.d")} color="primary" />
+              <FeatureCard icon={PiggyBank} title={t("landing.features.f5.t")} desc={t("landing.features.f5.d")} color="emerald" />
+              <FeatureCard icon={Coins} title={t("landing.features.f6.t")} desc={t("landing.features.f6.d")} color="amber" />
               <FeatureCard icon={Layers} title={t("landing.features.f2.t")} desc={t("landing.features.f2.d")} color="blue" />
               <FeatureCard icon={SlidersHorizontal} title={t("landing.features.f3.t")} desc={t("landing.features.f3.d")} color="amber" />
               <FeatureCard icon={Sparkles} title={t("landing.features.f4.t")} desc={t("landing.features.f4.d")} color="emerald" />
-              <FeatureCard icon={PiggyBank} title={t("landing.features.f5.t")} desc={t("landing.features.f5.d")} color="emerald" />
-              <FeatureCard icon={Coins} title={t("landing.features.f6.t")} desc={t("landing.features.f6.d")} color="amber" />
               <FeatureCard icon={GitCompare} title={t("landing.features.f7.t")} desc={t("landing.features.f7.d")} color="purple" />
               <FeatureCard icon={Share2} title={t("landing.features.f8.t")} desc={t("landing.features.f8.d")} color="rose" />
               <FeatureCard icon={FileText} title={t("landing.features.f9.t")} desc={t("landing.features.f9.d")} color="primary" />
