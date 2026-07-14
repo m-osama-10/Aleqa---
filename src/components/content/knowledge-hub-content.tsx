@@ -75,6 +75,33 @@ export function KnowledgeHubContent() {
       <div className="space-y-6">
         <p className="text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
 
+        {/* Sub-section navigation */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <Link href="/nutrition" className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm">
+            <div className="mb-1 text-xl">📖</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "دليل التغذية" : "Nutrition Guide"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "أهداف ومفاهيم" : "Targets & concepts"}</p>
+          </Link>
+          <div className="group rounded-xl border border-primary/40 bg-primary/5 p-3 text-center">
+            <div className="mb-1 text-xl">🧠</div>
+            <p className="text-xs font-bold text-primary">{isRtl ? "مركز المعرفة" : "Knowledge Center"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "٢٨ مقال" : "28 articles"}</p>
+          </div>
+          <Link href="/faq" className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm">
+            <div className="mb-1 text-xl">❓</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "الأسئلة الشائعة" : "FAQ"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "١٥ سؤال" : "15 questions"}</p>
+          </Link>
+          <button
+            onClick={() => setCatFilter("tips")}
+            className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm"
+          >
+            <div className="mb-1 text-xl">💡</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "نصائح التغذية" : "Nutrition Tips"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "نصائح عملية" : "Practical tips"}</p>
+          </button>
+        </div>
+
         {/* Category cards */}
         <section aria-labelledby="categories-heading">
           <h2

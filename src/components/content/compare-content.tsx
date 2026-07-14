@@ -123,6 +123,25 @@ function CompareContentInner() {
             : "Pick two ingredients to see nutrition values side-by-side with a best-choice recommendation."}
         </p>
 
+        {/* Sub-section navigation */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <Link href="/ingredients" className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm">
+            <div className="mb-1 text-xl">🌾</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "قائمة المواد" : "Ingredient List"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "٢٢ مكوّن" : "22 ingredients"}</p>
+          </Link>
+          <div className="rounded-xl border border-primary/40 bg-primary/5 p-3 text-center">
+            <div className="mb-1 text-xl">⚖️</div>
+            <p className="text-xs font-bold text-primary">{isRtl ? "مقارنة المواد" : "Compare"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "جنباً إلى جنب" : "Side by side"}</p>
+          </div>
+          <Link href="/knowledge?category=ingredients" className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm">
+            <div className="mb-1 text-xl">📖</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "مقالات المواد" : "Ingredient Articles"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "١٠ مقالات" : "10 articles"}</p>
+          </Link>
+        </div>
+
         {/* Selectors */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <IngredientSelect

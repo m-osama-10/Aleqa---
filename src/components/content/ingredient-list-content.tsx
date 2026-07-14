@@ -56,27 +56,24 @@ export function IngredientListContent() {
       <div className="space-y-4">
         <p className="text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
 
-        {/* Compare CTA */}
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-foreground">
-                {isRtl ? "قارن بين مكوّنين" : "Compare two ingredients"}
-              </p>
-              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                {isRtl
-                  ? "اعرض القيم الغذائية جنباً إلى جنب لاتخاذ قرار أفضل."
-                  : "See nutrition values side-by-side to make a better choice."}
-              </p>
-            </div>
-            <Button asChild size="sm" className="shrink-0">
-              <Link href="/compare">
-                <Scale className="h-4 w-4" />
-                {isRtl ? "صفحة المقارنة" : "Compare page"}
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Sub-section navigation */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <div className="rounded-xl border border-primary/40 bg-primary/5 p-3 text-center">
+            <div className="mb-1 text-xl">🌾</div>
+            <p className="text-xs font-bold text-primary">{isRtl ? "قائمة المواد" : "Ingredient List"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "٢٢ مكوّن" : "22 ingredients"}</p>
+          </div>
+          <Link href="/compare" className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm">
+            <div className="mb-1 text-xl">⚖️</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "مقارنة المواد" : "Compare"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "جنباً إلى جنب" : "Side by side"}</p>
+          </Link>
+          <Link href="/knowledge?category=ingredients" className="group rounded-xl border border-border/60 bg-card p-3 text-center transition-all hover:border-primary/40 hover:shadow-sm">
+            <div className="mb-1 text-xl">📖</div>
+            <p className="text-xs font-bold text-foreground">{isRtl ? "مقالات المواد" : "Ingredient Articles"}</p>
+            <p className="text-[10px] text-muted-foreground">{isRtl ? "١٠ مقالات" : "10 articles"}</p>
+          </Link>
+        </div>
 
         {/* Search + filter */}
         <div className="flex flex-col gap-2 sm:flex-row">

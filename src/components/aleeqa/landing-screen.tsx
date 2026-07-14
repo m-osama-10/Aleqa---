@@ -22,6 +22,9 @@ import {
   Layers,
   BookOpen,
   ArrowRight,
+  Beef,
+  ListChecks,
+  Wrench,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -77,6 +80,9 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
             <button onClick={() => scrollTo("features")} className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
               {t("landing.features.eyebrow")}
             </button>
+            <button onClick={() => scrollTo("tools")} className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+              {lang === "ar" ? "الأدوات" : "Tools"}
+            </button>
             <a href="/knowledge" className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
               <BookOpen className="h-3.5 w-3.5" />
               {lang === "ar" ? "المعرفة" : "Knowledge"}
@@ -115,6 +121,9 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               </button>
               <button onClick={() => scrollTo("features")} className="rounded-lg px-3 py-2 text-right text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
                 {t("landing.features.eyebrow")}
+              </button>
+              <button onClick={() => scrollTo("tools")} className="rounded-lg px-3 py-2 text-right text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
+                {lang === "ar" ? "الأدوات" : "Tools"}
               </button>
               <a href="/knowledge" className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-right text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
                 <BookOpen className="h-4 w-4" />
@@ -320,6 +329,106 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               <FeatureCard icon={GitCompare} title={t("landing.features.f7.t")} desc={t("landing.features.f7.d")} />
               <FeatureCard icon={Share2} title={t("landing.features.f8.t")} desc={t("landing.features.f8.d")} />
               <FeatureCard icon={FileText} title={t("landing.features.f9.t")} desc={t("landing.features.f9.d")} />
+            </div>
+          </div>
+        </section>
+
+        {/* Tools section — 2×3 grid of platform tools */}
+        <section id="tools" className="scroll-mt-16 py-12 sm:py-16">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div className="mb-8 text-center">
+              <Badge className="mb-2 gap-1.5 border-primary/30 bg-primary/10 text-primary hover:bg-primary/10">
+                <Wrench className="h-3.5 w-3.5" />
+                {lang === "ar" ? "الأدوات" : "Tools"}
+              </Badge>
+              <h2 className="text-balance text-2xl font-black leading-tight text-foreground sm:text-3xl">
+                {lang === "ar" ? "أدوات المنصة المتكاملة" : "Platform Tools"}
+              </h2>
+              <p className="mx-auto mt-2 max-w-2xl text-balance text-sm text-muted-foreground">
+                {lang === "ar"
+                  ? "كل ما تحتاجه لإدارة تغذية حيواناتك في مكان واحد — أدلة، حاسبات، ومقالات احترافية."
+                  : "Everything you need to manage your animals' nutrition — guides, calculators, and professional articles."}
+              </p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {/* Nutrition Guide */}
+              <a href="/nutrition" className="group rounded-2xl border border-border/60 bg-card p-5 transition-all hover:border-primary/40 hover:shadow-lg">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary transition-transform group-hover:scale-110">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 text-sm font-extrabold text-foreground">
+                  {lang === "ar" ? "دليل التغذية" : "Nutrition Guide"}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {lang === "ar" ? "الأهداف الغذائية لكل حيوان، فئات المكوّنات، والمفاهيم الأساسية." : "Nutritional targets per animal, ingredient categories, and key concepts."}
+                </p>
+              </a>
+
+              {/* Ingredients */}
+              <a href="/ingredients" className="group rounded-2xl border border-border/60 bg-card p-5 transition-all hover:border-primary/40 hover:shadow-lg">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/15 to-amber-500/5 text-amber-600 transition-transform group-hover:scale-110">
+                  <Wheat className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 text-sm font-extrabold text-foreground">
+                  {lang === "ar" ? "المواد الخام" : "Ingredients"}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {lang === "ar" ? "٢٢ مكوّن بتفاصيل كاملة: قيم غذائية، حدود، مميزات، عيوب، وبدائل." : "22 ingredients with full details: nutrition, bounds, pros, cons, and alternatives."}
+                </p>
+              </a>
+
+              {/* Compare */}
+              <a href="/compare" className="group rounded-2xl border border-border/60 bg-card p-5 transition-all hover:border-primary/40 hover:shadow-lg">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 text-emerald-600 transition-transform group-hover:scale-110">
+                  <GitCompare className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 text-sm font-extrabold text-foreground">
+                  {lang === "ar" ? "مقارنة المواد" : "Compare Ingredients"}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {lang === "ar" ? "قارن مادتين جنباً إلى جنب: البروتين، الطاقة، السعر، والتوصيات." : "Compare two ingredients side by side: protein, energy, price, and recommendations."}
+                </p>
+              </a>
+
+              {/* Livestock Cost Calculator */}
+              <a href="/livestock-cost-calculator" className="group rounded-2xl border border-border/60 bg-card p-5 transition-all hover:border-primary/40 hover:shadow-lg">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/15 to-purple-500/5 text-purple-600 transition-transform group-hover:scale-110">
+                  <Beef className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 text-sm font-extrabold text-foreground">
+                  {lang === "ar" ? "حاسبة التربية" : "Cost Calculator"}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {lang === "ar" ? "احسب تكلفة التربية كاملة: العلف، الشراء، الربح، نقطة التعادل، والعائد." : "Calculate full breeding cost: feed, purchase, profit, break-even, and ROI."}
+                </p>
+              </a>
+
+              {/* Knowledge Center */}
+              <a href="/knowledge" className="group rounded-2xl border border-border/60 bg-card p-5 transition-all hover:border-primary/40 hover:shadow-lg">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary transition-transform group-hover:scale-110">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 text-sm font-extrabold text-foreground">
+                  {lang === "ar" ? "مركز المعرفة" : "Knowledge Center"}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {lang === "ar" ? "٢٨ مقال احترافي عن تغذية الأبقار والجاموس والأغنام والدواجن." : "28 professional articles on cattle, buffalo, sheep, and poultry nutrition."}
+                </p>
+              </a>
+
+              {/* Calculator */}
+              <button onClick={onEnter} className="group rounded-2xl border border-border/60 bg-card p-5 text-start transition-all hover:border-primary/40 hover:shadow-lg">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary transition-transform group-hover:scale-110">
+                  <Calculator className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 text-sm font-extrabold text-foreground">
+                  {lang === "ar" ? "حاسبة العليقة" : "Feed Calculator"}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {lang === "ar" ? "احسب أرخص عليقة متوازنة في ٦ خطوات بمحرك برمجة خطية." : "Calculate the cheapest balanced ration in 6 steps with an LP engine."}
+                </p>
+              </button>
             </div>
           </div>
         </section>
