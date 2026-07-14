@@ -76,9 +76,6 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
             <button onClick={() => scrollTo("how")} className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
               {t("landing.how.eyebrow")}
             </button>
-            <button onClick={() => scrollTo("features")} className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
-              {t("landing.features.eyebrow")}
-            </button>
             <button onClick={() => scrollTo("tools")} className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
               {lang === "ar" ? "الأدوات" : "Tools"}
             </button>
@@ -117,9 +114,6 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               </button>
               <button onClick={() => scrollTo("how")} className="rounded-lg px-3 py-2 text-right text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
                 {t("landing.how.eyebrow")}
-              </button>
-              <button onClick={() => scrollTo("features")} className="rounded-lg px-3 py-2 text-right text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
-                {t("landing.features.eyebrow")}
               </button>
               <button onClick={() => scrollTo("tools")} className="rounded-lg px-3 py-2 text-right text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
                 {lang === "ar" ? "الأدوات" : "Tools"}
@@ -164,10 +158,9 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                   </Button>
                 </div>
 
-                <div className="mt-8 grid grid-cols-3 gap-2.5">
+                <div className="mt-8 grid grid-cols-2 gap-2.5">
                   <HeroStat value={lang === "ar" ? "٩" : "9"} label={t("landing.hero.stat_animals")} />
                   <HeroStat value={lang === "ar" ? "٢٢" : "22"} label={t("landing.hero.stat_ingredients")} />
-                  <HeroStat value={t("common.offline")} label={t("landing.hero.stat_offline")} />
                 </div>
               </div>
 
@@ -216,7 +209,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
           </div>
         </DelayedAd>
 
-        {/* Why use the app */}
+        {/* Merged: Why use the app + Features (one unified section) */}
         <section id="why" className="scroll-mt-16 py-12 sm:py-16">
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
             <div className="mb-8 text-center">
@@ -228,39 +221,16 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                 {t("landing.why.desc")}
               </p>
             </div>
-
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <Benefit
-                icon={Cpu}
-                title={t("landing.why.b1.t")}
-                desc={t("landing.why.b1.d")}
-              />
-              <Benefit
-                icon={PiggyBank}
-                title={t("landing.why.b2.t")}
-                desc={t("landing.why.b2.d")}
-                highlight
-              />
-              <Benefit
-                icon={ShieldCheck}
-                title={t("landing.why.b3.t")}
-                desc={t("landing.why.b3.d")}
-              />
-              <Benefit
-                icon={Coins}
-                title={t("landing.why.b4.t")}
-                desc={t("landing.why.b4.d")}
-              />
-              <Benefit
-                icon={Share2}
-                title={t("landing.why.b5.t")}
-                desc={t("landing.why.b5.d")}
-              />
-              <Benefit
-                icon={ShieldCheck}
-                title={t("landing.why.b6.t")}
-                desc={t("landing.why.b6.d")}
-              />
+              <FeatureCard icon={Calculator} title={t("landing.features.f1.t")} desc={t("landing.features.f1.d")} />
+              <FeatureCard icon={Layers} title={t("landing.features.f2.t")} desc={t("landing.features.f2.d")} />
+              <FeatureCard icon={SlidersHorizontal} title={t("landing.features.f3.t")} desc={t("landing.features.f3.d")} />
+              <FeatureCard icon={Sparkles} title={t("landing.features.f4.t")} desc={t("landing.features.f4.d")} />
+              <FeatureCard icon={PiggyBank} title={t("landing.features.f5.t")} desc={t("landing.features.f5.d")} />
+              <FeatureCard icon={Coins} title={t("landing.features.f6.t")} desc={t("landing.features.f6.d")} />
+              <FeatureCard icon={GitCompare} title={t("landing.features.f7.t")} desc={t("landing.features.f7.d")} />
+              <FeatureCard icon={Share2} title={t("landing.features.f8.t")} desc={t("landing.features.f8.d")} />
+              <FeatureCard icon={FileText} title={t("landing.features.f9.t")} desc={t("landing.features.f9.d")} />
             </div>
           </div>
         </section>
@@ -295,39 +265,6 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                 title={t("landing.how.s3.t")}
                 desc={t("landing.how.s3.d")}
               />
-            </div>
-          </div>
-        </section>
-
-        {/* In-feed ad before Features (delayed) */}
-        <DelayedAd delayMs={12000}>
-          <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-            <AdSection placement="in-feed" label={t("common.ad")} />
-          </div>
-        </DelayedAd>
-
-        {/* Main Features — unified section with all platform capabilities */}
-        <section id="features" className="scroll-mt-16 py-12 sm:py-16">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <div className="mb-8 text-center">
-              <Badge variant="secondary" className="mb-2">{t("landing.features.eyebrow")}</Badge>
-              <h2 className="text-balance text-2xl font-black leading-tight text-foreground sm:text-3xl">
-                {t("landing.features.title")}
-              </h2>
-              <p className="mx-auto mt-2 max-w-2xl text-balance text-sm text-muted-foreground">
-                {t("landing.features.subtitle")}
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <FeatureCard icon={Calculator} title={t("landing.features.f1.t")} desc={t("landing.features.f1.d")} />
-              <FeatureCard icon={Layers} title={t("landing.features.f2.t")} desc={t("landing.features.f2.d")} />
-              <FeatureCard icon={SlidersHorizontal} title={t("landing.features.f3.t")} desc={t("landing.features.f3.d")} />
-              <FeatureCard icon={Sparkles} title={t("landing.features.f4.t")} desc={t("landing.features.f4.d")} />
-              <FeatureCard icon={PiggyBank} title={t("landing.features.f5.t")} desc={t("landing.features.f5.d")} />
-              <FeatureCard icon={Coins} title={t("landing.features.f6.t")} desc={t("landing.features.f6.d")} />
-              <FeatureCard icon={GitCompare} title={t("landing.features.f7.t")} desc={t("landing.features.f7.d")} />
-              <FeatureCard icon={Share2} title={t("landing.features.f8.t")} desc={t("landing.features.f8.d")} />
-              <FeatureCard icon={FileText} title={t("landing.features.f9.t")} desc={t("landing.features.f9.d")} />
             </div>
           </div>
         </section>
