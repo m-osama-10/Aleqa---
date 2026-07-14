@@ -368,6 +368,24 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               {t("landing.footer.offline_note")}
             </p>
           </div>
+          {/* Content page links */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-border/40 pt-3 text-[11px]">
+            <a href="/guide" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "دليل الاستخدام" : "User Guide"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/nutrition" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "دليل التغذية" : "Nutrition Guide"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/faq" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "الأسئلة الشائعة" : "FAQ"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/privacy" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}
+            </a>
+          </div>
         </div>
       </footer>
 

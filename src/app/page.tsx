@@ -6,9 +6,8 @@ import { LandingScreen } from "@/components/aleeqa/landing-screen";
 import { AppShell } from "@/components/app-shell";
 import { AuthScreen } from "@/components/auth/auth-screen";
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
-import { AuthProvider, useAuth } from "@/lib/store/auth-context";
+import { useAuth } from "@/lib/store/auth-context";
 import { useAppStore } from "@/lib/store/app-store";
-import { LanguageProvider } from "@/lib/i18n";
 
 /* ---------- localStorage version check (prevents crashes from old data) ---------- */
 const LS_VERSION_KEY = "alieqa.version";
@@ -223,11 +222,5 @@ function AppInner() {
 }
 
 export default function Home() {
-  return (
-    <AuthProvider>
-      <LanguageProvider>
-        <SafeAppInner />
-      </LanguageProvider>
-    </AuthProvider>
-  );
+  return <SafeAppInner />;
 }

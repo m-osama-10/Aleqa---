@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Alexandria } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { LanguageProvider } from "@/lib/i18n";
+import { AuthProvider } from "@/lib/store/auth-context";
 
 const alexandria = Alexandria({
   variable: "--font-alexandria",
@@ -78,7 +80,11 @@ export default function RootLayout({
       <body
         className={`${alexandria.variable} font-alexandria antialiased bg-background text-foreground`}
       >
-        {children}
+        <AuthProvider>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

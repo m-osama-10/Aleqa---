@@ -239,6 +239,29 @@ export function AboutScreen() {
           <AdSmartlink variant="banner" />
         </div>
       </DelayedAd>
+
+      {/* Content page links */}
+      <Card className="border-border/40 bg-secondary/20">
+        <CardContent className="p-3">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px]">
+            <a href="/guide" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "📖 دليل الاستخدام" : "📖 User Guide"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/nutrition" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "🌿 دليل التغذية" : "🌿 Nutrition Guide"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/faq" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "❓ الأسئلة الشائعة" : "❓ FAQ"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/privacy" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "🔒 سياسة الخصوصية" : "🔒 Privacy Policy"}
+            </a>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
