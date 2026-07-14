@@ -4,7 +4,6 @@ import {
   Wheat,
   Calculator,
   Cpu,
-  WifiOff,
   Coins,
   PiggyBank,
   Share2,
@@ -243,7 +242,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                 highlight
               />
               <Benefit
-                icon={WifiOff}
+                icon={ShieldCheck}
                 title={t("landing.why.b3.t")}
                 desc={t("landing.why.b3.d")}
               />

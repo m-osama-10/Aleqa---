@@ -22,8 +22,8 @@ export const DICT: Record<Lang, Record<string, string>> = {
     // ---- common ----
     "common.app_name": "عليقة",
     "common.app_sub": "حاسبة العليقة الذكية",
-    "common.offline": "أوفلاين",
-    "common.free_offline": "مجاني · يعمل أوفلاين · للمربي المصري",
+    "common.offline": "مجاني",
+    "common.free_offline": "مجاني · للمربي المصري",
     "common.egp": "ج.م",
     "common.kg": "كجم",
     "common.day": "يوم",
@@ -98,24 +98,24 @@ export const DICT: Record<Lang, Record<string, string>> = {
     "landing.hero.title2": "عليقة ذكية",
     "landing.hero.title3": "في جيب كل مربي",
     "landing.hero.desc":
-      "خطة منتج متكاملة: أداة حسابية مجانية تخدم المربي، ونموذج أعمال متعدد المصادر يخدم الأعمال، وتقنية أوفلاين تناسب الواقع المصري. جاهزة للتنفيذ على مراحل.",
+      "خطة منتج متكاملة: أداة حسابية مجانية تخدم المربي، ونموذج أعمال متعدد المصادر يخدم الأعمال، وتقنية تناسب الواقع المصري. جاهزة للتنفيذ على مراحل.",
     "landing.hero.why_btn": "ليه أستخدم التطبيق؟",
     "landing.hero.stat_animals": "أنواع حيوانات",
     "landing.hero.stat_ingredients": "مكوّنات سوق",
-    "landing.hero.stat_offline": "بدون إنترنت",
+    "landing.hero.stat_offline": "مجاني",
     "landing.animals_strip": "يدعم أنواع الإنتاج الرئيسية في مصر",
     "landing.why.eyebrow": "ليه تستخدم التطبيق",
     "landing.why.title": "لأن المربي المصري يستاهل أداة",
     "landing.why.title_hl": "علمية ومجانية",
     "landing.why.desc":
-      "بدل ما تحسب العليقة على ورقة بقلم وتعتمد على التجربة والخطأ، عليقة تحسبها لك بدقة علمية وبأقل تكلفة — في ثوانٍ وبدون إنترنت.",
+      "بدل ما تحسب العليقة على ورقة بقلم وتعتمد على التجربة والخطأ، عليقة تحسبها لك بدقة علمية وبأقل تكلفة — في ثوانٍ ومجاناً.",
     "landing.why.b1.t": "دقة علمية حقيقية",
     "landing.why.b1.d":
       "محرك برمجة خطية (Linear Programming) يحسب أرخص عليقة متوازنة تحقق احتياجات الحيوان من البروتين والطاقة والألياف.",
     "landing.why.b2.t": "توفير مالي يومي",
     "landing.why.b2.d":
       "الموازن الاقتصادي يرتّب المكوّنات البديلة الأرخص التي تحقق نفس القيمة الغذائية، ويوريك التوفير بالجنيه يومياً وشهرياً.",
-    "landing.why.b3.t": "يعمل بدون إنترنت",
+    "landing.why.b3.t": "مجاني بالكامل",
     "landing.why.b3.d":
       "كل الحسابات والأسعار والعلائق محفوظة على جهازك. مناسبة للمزارع في المناطق اللي شبكتها ضعيفة.",
     "landing.why.b4.t": "أسعار سوقك أنت",
@@ -158,9 +158,9 @@ export const DICT: Record<Lang, Record<string, string>> = {
     "landing.features.f9.d": "زر واحد يعيد تشغيل محلل البرمجة الخطية مع احترام الخامات المقفلة والحدود",
 
     "landing.cta.title": "جاهز تحسب عليقتك بأقل تكلفة؟",
-    "landing.cta.desc": "ادخل الحاسبة دلوقتي — مجاني، بدون تسجيل، وبيشتغل بدون إنترنت.",
+    "landing.cta.desc": "ادخل الحاسبة دلوقتي — مجاني وبدون تسجيل.",
     "landing.footer.tagline": "أداة حسابية مجانية للمربي المصري",
-    "landing.footer.offline_note": "يعمل أوفلاين · بياناتك على جهازك",
+    "landing.footer.offline_note": "بياناتك محفوظة على جهازك",
 
     // ---- calculator ----
     "calc.s1.title": "اختر الحيوان وحالته الإنتاجية",
@@ -246,7 +246,7 @@ export const DICT: Record<Lang, Record<string, string>> = {
     "prices.subtitle_none": "أسعار افتراضية — عدّلها بأسعار سوقك",
     "prices.default_hint": "السعر الافتراضي: {n} ج.م/كجم",
     "prices.note":
-      "تُحفظ الأسعار على جهازك تلقائياً ويعمل التطبيق بدون إنترنت. عند توفّر الشبكة يمكنك تحديثها يدوياً بأسعار سوقك الأسبوعي. التركيبة تُعاد لحظياً مع كل تغيير سعر.",
+      "تُحفظ الأسعار على جهازك تلقائياً. يمكنك تحديثها يدوياً بأسعار سوقك الأسبوعي. التركيبة تُعاد لحظياً مع كل تغيير سعر.",
     "prices.invalid": "أدخل سعراً صحيحاً",
     "prices.saved": "تم تحديث سعر {name}",
     "prices.reset_done": "تمت إعادة الأسعار للقيم الافتراضية",
@@ -399,8 +399,8 @@ export const DICT: Record<Lang, Record<string, string>> = {
     // ---- common ----
     "common.app_name": "Aleeqa",
     "common.app_sub": "Smart Feed Calculator",
-    "common.offline": "Offline",
-    "common.free_offline": "Free · Offline · For Egyptian farmers",
+    "common.offline": "Free",
+    "common.free_offline": "Free · For Egyptian farmers",
     "common.egp": "EGP",
     "common.kg": "kg",
     "common.day": "day",
@@ -475,24 +475,24 @@ export const DICT: Record<Lang, Record<string, string>> = {
     "landing.hero.title2": "smart ration",
     "landing.hero.title3": "in every farmer's pocket",
     "landing.hero.desc":
-      "An integrated product: a free calculation tool that serves farmers, a multi-stream business model, and offline tech fit for the Egyptian reality. Ready to launch in phases.",
+      "An integrated product: a free calculation tool that serves farmers, a multi-stream business model, and tech fit for the Egyptian reality. Ready to launch in phases.",
     "landing.hero.why_btn": "Why use the app?",
     "landing.hero.stat_animals": "animal types",
     "landing.hero.stat_ingredients": "market ingredients",
-    "landing.hero.stat_offline": "no internet",
+    "landing.hero.stat_offline": "Free",
     "landing.animals_strip": "Supports the main production types in Egypt",
     "landing.why.eyebrow": "Why use the app",
     "landing.why.title": "Because Egyptian farmers deserve a",
     "landing.why.title_hl": "scientific & free tool",
     "landing.why.desc":
-      "Instead of computing rations on paper with trial and error, Aleeqa calculates them with scientific accuracy at the lowest cost — in seconds, offline.",
+      "Instead of computing rations on paper with trial and error, Aleeqa calculates them with scientific accuracy at the lowest cost — in seconds, free.",
     "landing.why.b1.t": "Real scientific accuracy",
     "landing.why.b1.d":
       "A Linear Programming engine finds the cheapest balanced ration that meets the animal's protein, energy, and fiber needs.",
     "landing.why.b2.t": "Daily money savings",
     "landing.why.b2.d":
       "The cost optimizer ranks cheaper alternative ingredients with the same nutritional value, showing savings in EGP daily and monthly.",
-    "landing.why.b3.t": "Works offline",
+    "landing.why.b3.t": "Completely free",
     "landing.why.b3.d":
       "All calculations, prices, and rations are stored on your device. Suited for farms with weak connectivity.",
     "landing.why.b4.t": "Your market prices",
@@ -535,9 +535,9 @@ export const DICT: Record<Lang, Record<string, string>> = {
     "landing.features.f9.d": "One button re-runs the LP solver while respecting locked ingredients and bounds",
 
     "landing.cta.title": "Ready to compute your cheapest ration?",
-    "landing.cta.desc": "Enter the calculator now — free, no sign-up, works offline.",
+    "landing.cta.desc": "Enter the calculator now — free, no sign-up.",
     "landing.footer.tagline": "A free calculation tool for Egyptian farmers",
-    "landing.footer.offline_note": "Works offline · Your data stays on your device",
+    "landing.footer.offline_note": "Your data is saved on your device",
 
     // ---- calculator ----
     "calc.s1.title": "Pick the animal & production stage",
@@ -623,7 +623,7 @@ export const DICT: Record<Lang, Record<string, string>> = {
     "prices.subtitle_none": "Default prices — adjust to your market",
     "prices.default_hint": "Default price: {n} EGP/kg",
     "prices.note":
-      "Prices auto-save on your device and the app works offline. When online, you can update them manually with your weekly market prices. The ration recomputes instantly on every price change.",
+      "Prices auto-save on your device. You can update them manually with your weekly market prices. The ration recomputes instantly on every price change.",
     "prices.invalid": "Enter a valid price",
     "prices.saved": "Updated price of {name}",
     "prices.reset_done": "Prices reset to defaults",
