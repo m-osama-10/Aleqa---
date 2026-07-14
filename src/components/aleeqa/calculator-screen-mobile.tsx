@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import {
   Calculator,
   PiggyBank,
@@ -194,36 +194,40 @@ export function CalculatorScreenMobile() {
 
   // When auto-balance is ON, sync the manualPercents with the computed result
   // so sliders + inputs reflect the new values automatically.
-  // FIX: sync ALL available keys (init to 0), not just components — otherwise
-  // ingredients the solver set to 0% would keep their old manualPercents value.
+  // FIX: Only sync when rebalanceNonce changes (Smart Rebalance button pressed).
+  // Previously this synced on EVERY displayResult change — including after
+  // saveRation (which triggers notify() → usePrices re-subscribe → lpResult
+  // recompute → displayResult recompute), which RESET user's manual edits
+  // back to the solver's automatic values.
+  // We use a layout effect to capture the latest values before the rebalance
+  // effect runs, avoiding both stale closures and the react-hooks/refs rule.
+  const latestDisplayResult = useRef(displayResult);
+  const latestManualMode = useRef(manualMode);
+  const latestAutoBalance = useRef(autoBalance);
+  const latestSelectedIngredients = useRef(selectedIngredientObjects);
   useEffect(() => {
-    if (manualMode && autoBalance && displayResult.feasible) {
-      const newPercents: Record<string, number> = {};
-      // Initialize ALL selected ingredients to 0
-      for (const ing of selectedIngredientObjects) {
-        newPercents[ing.key] = 0;
-      }
-      // Update from solver components (only non-zero ingredients)
-      for (const c of displayResult.components) {
-        if (newPercents[c.ingredient.key] !== undefined) {
-          newPercents[c.ingredient.key] = +c.percent.toFixed(1);
-        } else {
-          // Component key not in selectedIngredientObjects (stale) — skip
-        }
-      }
-      // Only update if values actually changed (avoid infinite loop)
-      let changed = false;
-      for (const k of Object.keys(newPercents)) {
-        if (Math.abs((manualPercents[k] ?? 0) - newPercents[k]) > 0.05) {
-          changed = true;
-          break;
-        }
-      }
-      if (changed) {
-        setManualPercents(newPercents);
+    latestDisplayResult.current = displayResult;
+    latestManualMode.current = manualMode;
+    latestAutoBalance.current = autoBalance;
+    latestSelectedIngredients.current = selectedIngredientObjects;
+  });
+
+  useEffect(() => {
+    if (rebalanceNonce === 0) return; // skip initial mount
+    if (!latestManualMode.current || !latestAutoBalance.current) return;
+    const dr = latestDisplayResult.current;
+    if (!dr.feasible) return;
+    const newPercents: Record<string, number> = {};
+    for (const ing of latestSelectedIngredients.current) {
+      newPercents[ing.key] = 0;
+    }
+    for (const c of dr.components) {
+      if (newPercents[c.ingredient.key] !== undefined) {
+        newPercents[c.ingredient.key] = +c.percent.toFixed(1);
       }
     }
-  }, [displayResult, manualMode, autoBalance, selectedIngredientObjects]);
+    setManualPercents(newPercents);
+  }, [rebalanceNonce]);
 
   // Toast feedback after "Smart Rebalance" button is pressed.
   // Watches rebalanceNonce — runs only when the button is pressed, reads the

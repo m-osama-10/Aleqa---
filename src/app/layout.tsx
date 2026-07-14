@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Alexandria } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -54,6 +55,9 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+// Google AdSense publisher ID
+const ADSENSE_CLIENT = "ca-pub-3474575203383848";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -61,6 +65,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
+      <head>
+        {/* Google AdSense — loaded once globally in <head> */}
+        <Script
+          id="adsbygoogle"
+          async
+          strategy="afterInteractive"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${alexandria.variable} font-alexandria antialiased bg-background text-foreground`}
       >
