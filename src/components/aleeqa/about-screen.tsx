@@ -2,35 +2,25 @@
 
 import {
   Calculator,
-  WifiOff,
   Cpu,
-  Coins,
+  SlidersHorizontal,
+  Sparkles,
+  GitCompare,
   ShieldCheck,
   Leaf,
-  Smartphone,
   Github,
   Facebook,
   Linkedin,
   Phone,
   Users,
   GraduationCap,
-  UserCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { INGREDIENTS, INGREDIENT_ORDER } from "@/lib/feed-data";
+import { DEFAULT_INGREDIENTS } from "@/lib/ingredient-db";
 import { useLang } from "@/lib/i18n";
 import { AdSection, AdSmartlink, DelayedAd } from "@/components/ads";
-
-const INGREDIENT_EMOJI: Record<string, string> = {
-  corn: "🌽",
-  soybean: "🫘",
-  bran: "🌾",
-  hay: "🌿",
-  straw: "🐄",
-  premix: "💊",
-};
 
 interface TeamMember {
   name: string;
@@ -79,7 +69,7 @@ const TEAM: TeamMember[] = [
 export function AboutScreen() {
   const { t, lang } = useLang();
 
-  const stepNum = (n: number) => (lang === "ar" ? ["١", "٢", "٣", "٤", "٥"][n - 1] : String(n));
+  const stepNum = (n: number) => (lang === "ar" ? ["١", "٢", "٣", "٤", "٥", "٦"][n - 1] : String(n));
 
   return (
     <div className="space-y-4">
@@ -176,17 +166,17 @@ export function AboutScreen() {
           desc={t("about.f1.d")}
         />
         <Feature
-          icon={WifiOff}
+          icon={SlidersHorizontal}
           title={t("about.f2.t")}
           desc={t("about.f2.d")}
         />
         <Feature
-          icon={Coins}
+          icon={Sparkles}
           title={t("about.f3.t")}
           desc={t("about.f3.d")}
         />
         <Feature
-          icon={Smartphone}
+          icon={GitCompare}
           title={t("about.f4.t")}
           desc={t("about.f4.d")}
         />
@@ -201,6 +191,7 @@ export function AboutScreen() {
             <Step n={stepNum(3)} text={t("about.step3")} />
             <Step n={stepNum(4)} text={t("about.step4")} />
             <Step n={stepNum(5)} text={t("about.step5")} />
+            <Step n={stepNum(6)} text={t("about.step6")} />
           </ol>
         </CardContent>
       </Card>
@@ -221,9 +212,9 @@ export function AboutScreen() {
         <CardContent className="p-4">
           <p className="mb-2 text-sm font-extrabold text-foreground">{t("about.components_title")}</p>
           <div className="flex flex-wrap gap-1.5">
-            {INGREDIENT_ORDER.map((k) => (
-              <Badge key={k} variant="secondary">
-                {INGREDIENT_EMOJI[k]} {lang === "ar" ? INGREDIENTS[k].name : INGREDIENTS[k].nameEn}
+            {DEFAULT_INGREDIENTS.map((ing) => (
+              <Badge key={ing.key} variant="secondary">
+                {ing.emoji} {lang === "ar" ? ing.name : ing.nameEn}
               </Badge>
             ))}
           </div>
