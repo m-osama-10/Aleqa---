@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Alexandria } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -66,11 +65,12 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        {/* Google AdSense — loaded once globally in <head> */}
-        <Script
-          id="adsbygoogle"
+        {/* Google AdSense — MUST be a raw <script> tag (not next/script) so
+            the AdSense crawler can find it in the static HTML for ownership
+            verification. next/script with afterInteractive only adds a
+            <link rel="preload"> + RSC data, which the crawler can't read. */}
+        <script
           async
-          strategy="afterInteractive"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
           crossOrigin="anonymous"
         />
