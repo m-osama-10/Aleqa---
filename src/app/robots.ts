@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.aleeqa.app/sitemap.xml",
-    host: "https://www.aleeqa.app",
+    sitemap: "https://aleqa.vercel.app/sitemap.xml",
+    host: "https://aleqa.vercel.app",
   };
 }

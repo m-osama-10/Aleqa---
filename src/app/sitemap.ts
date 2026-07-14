@@ -9,7 +9,7 @@ export const dynamic = "force-static";
  * Site base URL — used for absolute URLs in sitemap.
  * Brand is "Aleeqa" (https://www.aleeqa.app).
  */
-const SITE_URL = "https://www.aleeqa.app";
+const SITE_URL = "https://aleqa.vercel.app";
 
 /** Static top-level routes that don't depend on data. */
 const STATIC_ROUTES = [
