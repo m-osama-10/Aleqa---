@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "عليقة" }],
   manifest: "/manifest.json",
+  verification: {
+    google: "NzRc3YlGLaVsr9ZAAr6PN6pjkGiitrVZXNv-KouX4T4",
+  },
   icons: {
     icon: "/logo.svg",
     apple: "/icon-192.png",
