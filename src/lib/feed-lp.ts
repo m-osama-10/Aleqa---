@@ -809,6 +809,7 @@ export function computeManualResult(
     costPerMonth,
     costPerAnimal,
     costPerTon: +(costPerKg * 1000).toFixed(2),
+    achieved,
     targets,
     feasible: true,
     warnings,
