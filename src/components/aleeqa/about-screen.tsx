@@ -252,6 +252,22 @@ export function AboutScreen() {
               {lang === "ar" ? "🌿 دليل التغذية" : "🌿 Nutrition Guide"}
             </a>
             <span className="text-muted-foreground/40">·</span>
+            <a href="/knowledge" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "📚 مركز المعرفة" : "📚 Knowledge Center"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/ingredients" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "🌾 المواد الخام" : "🌾 Ingredients"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/compare" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "⚖️ مقارنة المواد" : "⚖️ Compare"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/livestock-cost-calculator" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "💰 حاسبة التربية" : "💰 Cost Calculator"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
             <a href="/faq" className="text-muted-foreground transition-colors hover:text-primary">
               {lang === "ar" ? "❓ الأسئلة الشائعة" : "❓ FAQ"}
             </a>

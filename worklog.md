@@ -613,3 +613,125 @@ Stage Summary:
 - Files touched: 11 (i18n.tsx + 10 component files)
 - Files NOT touched (per task rules): src/lib/feed-lp.ts (warnings handled by translateWarnings), src/lib/ration-report.ts (own REPORT_DICT), ads/ad-banner.tsx and ads/ad-native-banner.tsx (out of task scope — Arabic-only aria-labels in ad library, kept minimal).
 - Pre-existing lint error in src/app/page.tsx (react-hooks/error-boundaries) and pre-existing TS errors in rations-screen.tsx lines 481-482 are unrelated to this i18n migration.
+
+---
+Task ID: P2
+Agent: main (Z.ai Code)
+Task: Create `/livestock-cost-calculator` page (route + client component)
+
+Work Log:
+- Read worklog.md (P1/i18n history; no prior P2 record), `content-page-layout.tsx`, `guide-content.tsx` pattern, `i18n.tsx` `useLang` signature, `layout.tsx` (html dir=rtl hardcoded), shadcn ui components (card/input/label/button/badge/separator).
+- Created `src/app/livestock-cost-calculator/page.tsx` — server component exporting bilingual `metadata` and rendering `<LivestockCostCalculator />`.
+- Created `src/components/content/livestock-cost-calculator.tsx` ("use client"):
+  * Single `useState<Inputs>` holding 9 string fields; defaults = realistic Egyptian fattening scenario (10 head, 18 000 EGP purchase, 200→400 kg, 120 days, 6 kg/day feed @ 12 EGP/kg, 180 EGP/kg sale, 5 000 EGP other).
+  * Pure `useMemo`-based live calculations covering all 11 required outputs (totalWeightGain, totalFeedConsumed, totalFeedCost, totalPurchaseCost, totalCost, costPerKgGained, totalRevenue, netProfit, profitMargin, breakEvenPrice, roi) + 3 cost-breakdown ratios. All 4 division-by-zero cases guarded.
+  * Helpers: `num()` parses string→safe non-negative number; `fmt()` formats via `toLocaleString` with ar-EG/en-US locale switching.
+  * Two-column grid (`md:grid-cols-2`): Inputs card first (renders on RIGHT in the page's RTL html context), Results stack second (renders on LEFT). Stacks inputs-above-results on mobile.
+  * Inputs card: Beef icon header + ghost Reset button + 9 fields each w/ icon-Label, numeric Input, fixed-width unit chip (head/kg/days/kg·day⁻¹/EGP·kg⁻¹/EGP).
+  * Results = 3 cards:
+    1. Net Profit headline — color-coded emerald (profit) / rose (loss) / amber (|profit|<0.5 EGP = break-even). 2px border + tinted bg, status Badge, ArrowUpRight/ArrowDownRight/PiggyBank icon, 3xl profit number, 2-col sub-grid (revenue + cost).
+    2. Cost Breakdown — BarChart3 header; 3 animated width-bars (Purchase=primary, Feed=amber-500, Other=slate-500) each w/ amount + ratio%.
+    3. Economic Indicators — 2-col grid of 8 Metric tiles: weightGain, feedConsumed, feedCost, purchaseCost, costPerKgGained, breakEvenPrice, profitMargin (toned), roi (toned).
+  * Bilingual: single `L = isRtl ? {AR…} : {EN…}` object (consolidated guide-content.tsx pattern). EGP suffix flips ج.م ↔ EGP.
+  * Sub-components: `BreakdownBar`, `Metric` (optional `tone` prop for green/red/amber coloring).
+  * "use client", lucide-react icons, shadcn/ui Card/CardContent/CardHeader/CardTitle/CardDescription/Button/Input/Label/Badge/Separator, `ContentPageLayout` wrapper with bilingual title.
+- Verified `bun run lint` → clean (no new errors).
+- Verified `bunx tsc --noEmit` (whole project) → no errors in the two new files (pre-existing unrelated TS errors in rations-screen.tsx:481-482 remain).
+- Wrote work record to `/agent-ctx/P2-livestock-cost-calculator.md`.
+
+Files created:
+1. `src/app/livestock-cost-calculator/page.tsx` (11 lines)
+2. `src/components/content/livestock-cost-calculator.tsx` (~470 lines)
+
+Stage Summary:
+- 2 new files, 0 existing files modified.
+- All 11 calculations implemented exactly per spec with division-by-zero guards.
+- Live updates via `useMemo([inputs])`, no external state, no API calls.
+- Color-coding (green/red/amber) applied to Net Profit card, profitMargin tile, and roi tile.
+- Cost breakdown bar chart implemented as 3 custom animated bars (one per cost category) with ratio %.
+- RTL grid layout: inputs right, results left on desktop; single column on mobile.
+- Bilingual AR+EN throughout via `useLang()` / `lang === "ar"`.
+- No test code written (per rules).
+
+---
+Task ID: P1
+Agent: ingredient-pages (Z.ai Code)
+Task: Build ingredient pages and comparison page for the Alieqa feed calculator
+
+Work Log:
+- Read worklog.md, faq-content.tsx, content-page-layout.tsx, nutrition-content.tsx, ingredient-db.ts (DEFAULT_INGREDIENTS — 22 ingredients), ingredient-details.ts (INGREDIENT_DETAILS — rich data with descriptions, pros/cons, alternatives), i18n.tsx (useLang/t/DICT, confirmed common.egp/common.kg keys), prices-screen.tsx (ingredient card pattern), package.json + next.config.ts (confirmed output: "export" + trailingSlash: true).
+- Created src/components/content/ingredient-list-content.tsx ("use client") — /ingredients index page: ContentPageLayout wrapper, compare CTA card, search input + category Select filter, all 22 ingredients grouped by CATEGORY_ORDER, each card links to /ingredients/[key].
+- Created src/components/content/ingredient-detail-content.tsx ("use client") — /ingredients/[key] page: takes ingredientKey prop, reads from DEFAULT_INGREDIENTS + getIngredientDetail, shows hero (emoji + name + category badge + quick stats + compare link), description, nutrition table (7 rows), usage bounds (min/max cards + uses text), pros (emerald/Check) + cons (rose/X) side-by-side, when to use/avoid cards, alternatives grid (replacement ratio + protein/energy/cost impacts + compare button), bottom action buttons. Graceful not-found fallback.
+- Created src/components/content/compare-content.tsx ("use client") — /compare page: wrapped in Suspense (required for useSearchParams in static export). Reads ?a=KEY&?b=KEY query params, validates against VALID_KEYS, falls back to corn vs soybean44. Two grouped Select dropdowns (other side disabled), swap button, 10-row comparison table with winner highlighting (emerald bg), pros/cons cards per side, recommendation card with protein/price value index + 1-5 bilingual point sentences + overall winner summary.
+- Created src/app/ingredients/page.tsx (server) — renders IngredientListContent, static metadata (bilingual title/description + canonical + OpenGraph).
+- Created src/app/ingredients/[key]/page.tsx (server) — generateStaticParams for all 22 keys, async generateMetadata (Next.js 16 promises-based params) producing per-ingredient <title> "AR name | EN name | عليقة" + bilingual description, default export awaits params and renders IngredientDetailContent.
+- Created src/app/compare/page.tsx (server) — renders CompareContent, static metadata.
+- Did NOT modify any existing calculation logic, ingredient DB schema, or i18n dictionary.
+
+Verification:
+- `bun run lint` → 0 errors, 0 warnings (clean).
+- `bunx tsc --noEmit` → no new errors in the 6 new files (only pre-existing errors in unrelated test/example/skill files).
+- Dev server routes verified HTTP 200:
+  - /ingredients/ (71 KB) — all 22 ingredient links present (verified via grep including digit-containing keys like soybean44/soybean46).
+  - /ingredients/corn/ (58 KB) — title "<title>ذرة صفراء | Yellow Corn | عليقة</title>", contains nutrition table, alternatives, compare CTA.
+  - /ingredients/{soybean44,hay,limestone,toxin_binder,vitamins}/ → all 200.
+  - /compare/ (62 KB) and /compare/?a=corn&b=soybean44 (63 KB) → both render with recommendation block, swap button, pros/cons side-by-side, winner-highlighted cells.
+- All 22 ingredient detail pages statically generated via generateStaticParams.
+
+Stage Summary:
+- 6 files created:
+  - src/components/content/ingredient-list-content.tsx
+  - src/components/content/ingredient-detail-content.tsx
+  - src/components/content/compare-content.tsx
+  - src/app/ingredients/page.tsx
+  - src/app/ingredients/[key]/page.tsx
+  - src/app/compare/page.tsx
+- 1 worklog record written: agent-ctx/P1-ingredient-pages.md
+- All routes use ContentPageLayout + shadcn/ui (Card, Badge, Button, Separator, Select, Input) + lucide-react icons.
+- All bilingual (AR + EN) via lang === "ar" checks.
+- Lint clean, no new TypeScript errors, all routes serve HTTP 200.
+
+---
+Task ID: P3
+Agent: knowledge-center (Z.ai Code)
+Task: Build Knowledge Center hub + article pages + SEO infrastructure (sitemap, robots)
+
+Work Log:
+- Read worklog.md (P1/P2/i18n history), faq-content.tsx, content-page-layout.tsx, guide-content.tsx, ingredient-list-content.tsx, ingredient-detail-content.tsx, compare-content.tsx, i18n.tsx, layout.tsx, ingredient-db.ts (DEFAULT_INGREDIENTS 22 keys), next.config.ts (output: "export" + trailingSlash: true).
+- Followed ContentPageLayout + "use client" + isRtl = lang === "ar" pattern from existing content components.
+
+Files created (7 new + 1 removed):
+1. src/lib/articles.ts (~600 lines) — Article/ArticleCategory types, 9 categories (cattle/buffalo/sheep/poultry/ingredients/nutrition-values/calculator-guide/tips/mistakes), 8 articles with substantial AR+EN markdown content (4-7 paragraphs each), helpers (getArticle, getCategory, getArticlesByCategory, getRelatedArticles, ARTICLE_SLUGS).
+2. src/components/content/knowledge-hub-content.tsx (~270 lines, "use client") — KnowledgeHubContent: 9 category cards (toggle filter via click), search input + category Select, article list (category Badge + read time + title + excerpt + chevron), CTA card.
+3. src/components/content/article-content.tsx (~390 lines, "use client") — ArticleContent: JSON-LD Article schema injected via <script type="application/ld+json">, breadcrumb (Home > Knowledge > Category), article header (Badge + read time + date), MarkdownRenderer (custom lightweight parser: h2/h3/blockquote/ul/ol/table/bold/paragraphs — no external markdown dependency), related articles grid, CTA card, graceful not-found fallback.
+4. src/app/knowledge/page.tsx (~22 lines, server) — bilingual metadata + renders KnowledgeHubContent.
+5. src/app/knowledge/[slug]/page.tsx (~56 lines, server) — generateStaticParams for 8 slugs, async generateMetadata (Next.js 16 promises-based params) producing per-article title + canonical + OpenGraph article type + Twitter card.
+6. src/app/sitemap.ts (~50 lines) — `export const dynamic = "force-static"` (REQUIRED for output: "export" — without this /sitemap.xml throws 500); 39 entries: 9 static routes + 22 ingredients + 8 articles; SITE_URL = https://www.aleeqa.app.
+7. src/app/robots.ts (~17 lines) — `export const dynamic = "force-static"`; Allow: / for *, Sitemap + Host pointers.
+8. Removed public/robots.txt (static file would have overridden app/robots.ts per Next.js precedence).
+
+Critical fix discovered during testing:
+- Initial /sitemap.xml and /robots.txt returned HTTP 500 with error: "export const dynamic = \"force-static\"/export const revalidate not configured on route with output: export". Adding `export const dynamic = "force-static"` to BOTH files resolved the issue — Next.js requires this for static export of metadata route handlers.
+
+Verification:
+- `bun run lint` → 0 errors, 0 warnings (clean).
+- `bunx tsc --noEmit` → no new TypeScript errors in any of the 7 new files (only pre-existing errors in unrelated examples/, skills/, and src/lib/__tests__/).
+- All routes return HTTP 200:
+  - /knowledge/ → 200 (all 9 category labels verified rendered: تغذية الأبقار، تغذية الجاموس، تغذية الأغنام، تغذية الدواجن، شرح المواد الخام، شرح القيم الغذائية، كيفية استخدام الحاسبة، نصائح للمربين، أخطاء شائعة)
+  - All 8 article pages → 200 (cattle-nutrition-basics, buffalo-nutrition-guide, poultry-feed-formulation, understanding-protein-energy, common-feeding-mistakes, how-to-use-calculator, saving-money-on-feed, seasonal-feed-management)
+  - /sitemap.xml → 200 (39 <url> entries: 9 static + 22 ingredients + 8 articles; verified XML content)
+  - /robots.txt → 200 (User-Agent: * Allow: /, Sitemap: https://www.aleeqa.app/sitemap.xml, Host: https://www.aleeqa.app)
+- JSON-LD verified on /knowledge/cattle-nutrition-basics/: "@type":"Article", "headline":"أساسيات تغذية الأبقار", "datePublished":"2025-01-15", "inLanguage":"ar", "articleSection":"تغذية الأبقار", "@id":"/knowledge/cattle-nutrition-basics" — all present in HTML.
+- Markdown rendering verified on /knowledge/buffalo-nutrition-guide/ (article containing table): h2, h3, table, thead, th elements all present in HTML.
+- Did NOT modify any existing calculation logic, ingredient DB schema, i18n dictionary, or existing routes.
+
+Stage Summary:
+- 7 new files created + 1 file removed.
+- 8 articles × 2 languages (AR + EN) = 16 substantial article bodies (4-7 paragraphs each, ~5-6 min read each).
+- 9 article categories with bilingual labels + descriptions.
+- 39 sitemap URLs covering all 9 static routes + 22 ingredient pages + 8 article pages.
+- JSON-LD Article schema injected on every article page for SEO (headline, datePublished, inLanguage, articleSection, publisher org).
+- Lightweight custom Markdown renderer — no external markdown dependency added (react-markdown was available but unused; avoids potential ESM/SSR issues in static export).
+- Bilingual AR + EN throughout via lang === "ar" checks.
+- All routes use ContentPageLayout + shadcn/ui (Card, CardContent, Badge, Button, Separator, Input, Select) + lucide-react icons (Search, Clock, ChevronLeft/Right, Home, BookOpen, ArrowRight, AlertTriangle).
+- Lint clean, no new TypeScript errors, all routes serve HTTP 200, JSON-LD present in static HTML, sitemap.xml and robots.txt generated successfully.

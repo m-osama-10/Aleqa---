@@ -69,6 +69,22 @@ export function ContentPageLayout({
               {isRtl ? "دليل التغذية" : "Nutrition Guide"}
             </Link>
             <span>·</span>
+            <Link href="/knowledge" className="transition-colors hover:text-primary">
+              {isRtl ? "مركز المعرفة" : "Knowledge Center"}
+            </Link>
+            <span>·</span>
+            <Link href="/ingredients" className="transition-colors hover:text-primary">
+              {isRtl ? "المواد الخام" : "Ingredients"}
+            </Link>
+            <span>·</span>
+            <Link href="/compare" className="transition-colors hover:text-primary">
+              {isRtl ? "مقارنة المواد" : "Compare"}
+            </Link>
+            <span>·</span>
+            <Link href="/livestock-cost-calculator" className="transition-colors hover:text-primary">
+              {isRtl ? "حاسبة التربية" : "Cost Calculator"}
+            </Link>
+            <span>·</span>
             <Link href="/faq" className="transition-colors hover:text-primary">
               {isRtl ? "الأسئلة الشائعة" : "FAQ"}
             </Link>
