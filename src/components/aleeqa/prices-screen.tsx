@@ -49,7 +49,7 @@ export function PricesScreen() {
   }, [displayIngredients, search]);
 
   const handleReset = () => {
-    if (confirm(isRtl ? "إعادة كل القيم للافتراضية؟" : "Reset all to defaults?")) {
+    if (confirm(t("prices.reset_confirm"))) {
       resetAllIngredients();
     }
   };
@@ -63,18 +63,16 @@ export function PricesScreen() {
             <div className="flex items-center gap-2">
               <Beaker className="h-5 w-5 text-primary" />
               <h2 className="text-base font-extrabold">
-                {isRtl ? "قاعدة بيانات المواد الخام" : "Ingredient Database"}
+                {t("prices.ingredient_db_title")}
               </h2>
             </div>
             <Button size="sm" variant="outline" className="shrink-0 gap-1.5" onClick={handleReset}>
               <RotateCcw className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">{isRtl ? "إعادة ضبط" : "Reset"}</span>
+              <span className="hidden sm:inline">{t("prices.reset_btn")}</span>
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            {isRtl
-              ? "اضغط على أي مادة لتعديل القيم الغذائية والسعر. التغييرات تُحفظ وتُستخدم فوراً في الحسابات."
-              : "Tap any ingredient to edit nutrition values and price. Changes are saved and used instantly."}
+            {t("prices.edit_hint")}
           </p>
         </CardContent>
       </Card>
@@ -85,7 +83,7 @@ export function PricesScreen() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={isRtl ? "بحث..." : "Search..."}
+          placeholder={t("prices.search_placeholder")}
           className="pl-9"
         />
       </div>
@@ -114,6 +112,7 @@ export function PricesScreen() {
                 onPriceChange={(v) => updatePrice(ing.key as never, v)}
                 onFieldChange={(field, v) => updateIngredient(ing.key, field, v)}
                 isRtl={isRtl}
+                t={t}
               />
             ))}
           </div>
@@ -121,12 +120,10 @@ export function PricesScreen() {
       })}
 
       <p className="rounded-lg bg-primary/5 p-3 text-center text-[11px] text-muted-foreground">
-        {isRtl
-          ? "💡 جميع القيم قابلة للتعديل وتُحفظ على جهازك"
-          : "💡 All values are editable and stored locally"}
+        {t("prices.editable_hint")}
       </p>
 
-      <AdSection placement="in-feed" label="إعلان" />
+      <AdSection placement="in-feed" label={t("common.ad")} />
       <div className="flex justify-center">
         <AdSmartlink variant="banner" />
       </div>
@@ -143,6 +140,7 @@ function IngredientCard({
   onPriceChange,
   onFieldChange,
   isRtl,
+  t,
 }: {
   ing: IngredientNutrition;
   price: number;
@@ -151,6 +149,7 @@ function IngredientCard({
   onPriceChange: (v: number) => void;
   onFieldChange: (field: keyof IngredientNutrition, v: string | number) => void;
   isRtl: boolean;
+  t: (key: string, vars?: Record<string, string | number>) => string;
 }) {
   return (
     <Card className={cn("border-border/60", isExpanded && "border-primary/40")}>
@@ -163,14 +162,14 @@ function IngredientCard({
           <div className="min-w-0 flex-1 text-left">
             <p className="text-sm font-bold leading-tight">{isRtl ? ing.name : ing.nameEn}</p>
             <p className="mt-0.5 text-[10px] text-muted-foreground">
-              {isRtl ? "بروتين" : "CP"}: {ing.protein}% ·{" "}
-              {isRtl ? "طاقة" : "TDN"}: {ing.tdn}% ·{" "}
-              {isRtl ? "ألياف" : "CF"}: {ing.fiber}%
+              {t("prices.cp_label")}: {ing.protein}% ·{" "}
+              {t("prices.tdn_label")}: {ing.tdn}% ·{" "}
+              {t("prices.cf_label")}: {ing.fiber}%
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
-              {price} {isRtl ? "ج/كجم" : "EGP/kg"}
+              {price} {t("prices.egp_per_kg_short")}
             </span>
             {isExpanded ? (
               <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -185,12 +184,12 @@ function IngredientCard({
           <div className="mt-3 space-y-3 border-t border-border/40 pt-3">
             <div className="flex items-center gap-1.5 text-xs font-bold text-primary">
               <Edit3 className="h-3.5 w-3.5" />
-              {isRtl ? "تعديل القيم الغذائية" : "Edit Nutrition Values"}
+              {t("prices.edit_nutrition")}
             </div>
 
             {/* Price */}
             <EditField
-              label={isRtl ? "السعر (جنيه/كجم)" : "Price (EGP/kg)"}
+              label={t("prices.price_field")}
               value={price}
               step={0.5}
               onChange={onPriceChange}
@@ -199,55 +198,55 @@ function IngredientCard({
             {/* Nutrition values */}
             <div className="grid grid-cols-2 gap-2">
               <EditField
-                label={isRtl ? "بروتين خام (CP %)" : "Crude Protein (CP %)"}
+                label={t("prices.protein_field")}
                 value={ing.protein}
                 step={0.1}
                 onChange={(v) => onFieldChange("protein", v)}
               />
               <EditField
-                label={isRtl ? "طاقة (TDN %)" : "Energy (TDN %)"}
+                label={t("prices.tdn_field")}
                 value={ing.tdn}
                 step={0.1}
                 onChange={(v) => onFieldChange("tdn", v)}
               />
               <EditField
-                label={isRtl ? "ألياف خام (CF %)" : "Crude Fiber (CF %)"}
+                label={t("prices.fiber_field")}
                 value={ing.fiber}
                 step={0.1}
                 onChange={(v) => onFieldChange("fiber", v)}
               />
               <EditField
-                label={isRtl ? "دهون (EE %)" : "Fat (EE %)"}
+                label={t("prices.fat_field")}
                 value={ing.fat}
                 step={0.1}
                 onChange={(v) => onFieldChange("fat", v)}
               />
               <EditField
-                label={isRtl ? "كالسيوم (Ca %)" : "Calcium (Ca %)"}
+                label={t("prices.calcium_field")}
                 value={ing.calcium}
                 step={0.01}
                 onChange={(v) => onFieldChange("calcium", v)}
               />
               <EditField
-                label={isRtl ? "فوسفور (P %)" : "Phosphorus (P %)"}
+                label={t("prices.phosphorus_field")}
                 value={ing.phosphorus}
                 step={0.01}
                 onChange={(v) => onFieldChange("phosphorus", v)}
               />
               <EditField
-                label={isRtl ? "مادة جافة (DM %)" : "Dry Matter (DM %)"}
+                label={t("prices.dm_field")}
                 value={ing.dryMatter}
                 step={0.1}
                 onChange={(v) => onFieldChange("dryMatter", v)}
               />
               <EditField
-                label={isRtl ? "أدنى استخدام (%)" : "Min Usage (%)"}
+                label={t("prices.min_usage_field")}
                 value={ing.minUsage}
                 step={0.5}
                 onChange={(v) => onFieldChange("minUsage", v)}
               />
               <EditField
-                label={isRtl ? "أقصى استخدام (%)" : "Max Usage (%)"}
+                label={t("prices.max_usage_field")}
                 value={ing.maxUsage}
                 step={0.5}
                 onChange={(v) => onFieldChange("maxUsage", v)}

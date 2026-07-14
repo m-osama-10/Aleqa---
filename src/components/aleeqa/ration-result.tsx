@@ -23,6 +23,7 @@ import {
 import type { FormulationResult } from "@/lib/feed-data";
 import { ANIMALS, normalizeFormulationResult } from "@/lib/feed-data";
 import { useLang, type Lang } from "@/lib/i18n";
+import { translateWarnings } from "@/lib/warnings";
 
 interface RationResultProps {
   result: FormulationResult;
@@ -65,6 +66,8 @@ export function RationResult({
   // from the formulators is already normalized, but a saved-ration path or a
   // future code change might not be). This mirrors the guard in ManualEditor.
   const safeResult = normalizeFormulationResult(result);
+  // Translate solver warnings (Arabic by default) to the current UI language
+  const warnings = translateWarnings(safeResult.warnings, lang);
 
   if (!safeResult.feasible) {
     return (
@@ -73,7 +76,7 @@ export function RationResult({
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
           <div>
             <p className="text-sm font-bold text-foreground">{t("result.infeasible")}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{safeResult.warnings[0]}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{warnings[0]}</p>
           </div>
         </CardContent>
       </Card>
@@ -191,9 +194,9 @@ export function RationResult({
       </div>
 
       {/* Warnings */}
-      {safeResult.warnings.length > 0 && (
+      {warnings.length > 0 && (
         <div className="space-y-1.5 rounded-lg border border-amber-400/40 bg-amber-50/70 p-3">
-          {safeResult.warnings.map((w, i) => (
+          {warnings.map((w, i) => (
             <p key={i} className="flex items-start gap-1.5 text-[11px] text-amber-900">
               <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
               {w}

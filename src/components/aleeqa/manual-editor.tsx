@@ -24,10 +24,11 @@ import {
 import type { FormulationResult } from "@/lib/feed-data";
 import { normalizeFormulationResult } from "@/lib/feed-data";
 import type { IngredientNutrition, IngredientCategory } from "@/lib/ingredient-db";
-import { CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/ingredient-db";
+import { CATEGORY_ORDER, categoryLabel } from "@/lib/ingredient-db";
 import type { PriceMap } from "@/lib/storage";
 import { distributePercentageChange, getSum } from "@/lib/percentage-distribution";
 import { useLang } from "@/lib/i18n";
+import { translateWarnings } from "@/lib/warnings";
 
 /* ================================================================== */
 /*  TYPES & CONSTANTS                                                  */
@@ -114,6 +115,11 @@ function ManualEditorBase({
 
   // Defense-in-depth: normalize via the shared helper.
   const safeResult = useMemo(() => normalizeFormulationResult(result), [result]);
+  // Translate solver warnings (Arabic by default) to the current UI language
+  const warnings = useMemo(
+    () => translateWarnings(safeResult.warnings, lang),
+    [safeResult.warnings, lang]
+  );
 
   // Build ingredient map (memoized)
   const ingMap = useMemo(() => {
@@ -272,26 +278,24 @@ function ManualEditorBase({
             </button>
             <div>
               <p className="text-xs font-bold text-foreground">
-                {lang === "ar" ? "موازنة تلقائية ذكية" : "Smart Auto-Balance"}
+                {t("manual.auto_balance")}
               </p>
               <p className="text-[10px] text-muted-foreground">
-                {lang === "ar"
-                  ? "ثبّت الخامات🔒 ويعدّل الباقي تلقائياً"
-                  : "Lock🔒, auto-adjust rest"}
+                {t("manual.auto_balance_sub")}
               </p>
             </div>
           </div>
           {lockedKeys.size > 0 && (
             <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">
-              {lockedKeys.size} {lang === "ar" ? "مثبت" : "locked"}
+              {lockedKeys.size} {t("manual.locked_count")}
             </span>
           )}
         </div>
 
         {/* === Auto-balance warnings === */}
-        {autoBalance && safeResult.warnings.length > 0 && (
+        {autoBalance && warnings.length > 0 && (
           <div className="rounded-lg border border-amber-400/50 bg-amber-50 p-2.5">
-            {safeResult.warnings.map((w, i) => (
+            {warnings.map((w, i) => (
               <p key={i} className="text-[10px] font-medium text-amber-800">
                 {w}
               </p>
@@ -327,9 +331,9 @@ function ManualEditorBase({
         </div>
 
         {/* === Bottom warnings === */}
-        {safeResult.warnings.length > 0 && (
+        {warnings.length > 0 && (
           <div className="rounded-lg border border-amber-400/40 bg-amber-50/70 p-2.5">
-            {safeResult.warnings.map((w, i) => (
+            {warnings.map((w, i) => (
               <p
                 key={i}
                 className="flex items-start gap-1.5 text-[11px] text-amber-800"
@@ -475,7 +479,7 @@ const CategoryAccordion = memo(function CategoryAccordion({
   const [open, setOpen] = useState(true);
   const color = CATEGORY_COLORS[category];
   const dotClass = CATEGORY_DOT[category];
-  const label = CATEGORY_LABELS[category];
+  const label = categoryLabel(category, lang);
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>

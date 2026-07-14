@@ -713,7 +713,7 @@ export function CalculatorScreen() {
       {/* Result */}
       <div>
         {/* In-feed ad above the result */}
-        <AdSection placement="in-feed" label="إعلان" className="mb-3" />
+        <AdSection placement="in-feed" label={t("common.ad")} className="mb-3" />
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Calculator className="h-5 w-5 text-primary" />
           <h3 className="text-base font-extrabold text-foreground">

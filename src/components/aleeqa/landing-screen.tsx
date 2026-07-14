@@ -160,7 +160,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
         </section>
 
         {/* In-feed ad after hero */}
-        <AdSection placement="in-feed" label="إعلان" />
+        <AdSection placement="in-feed" label={t("common.ad")} />
 
         {/* Animal strip */}
         <section className="border-y border-border/50 bg-secondary/30">
@@ -243,7 +243,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
         </section>
 
         {/* In-feed ad between sections */}
-        <AdSection placement="in-feed" label="إعلان" />
+        <AdSection placement="in-feed" label={t("common.ad")} />
 
         {/* How it works */}
         <section id="how" className="scroll-mt-16 bg-secondary/30 py-12 sm:py-16">
@@ -276,7 +276,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
 
         {/* In-feed ad + smartlink before Features */}
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-          <AdSection placement="in-feed" label="إعلان" />
+          <AdSection placement="in-feed" label={t("common.ad")} />
           <div className="mt-4 flex justify-center">
             <AdSmartlink variant="banner" />
           </div>

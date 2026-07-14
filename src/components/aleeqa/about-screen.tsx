@@ -89,13 +89,11 @@ export function AboutScreen() {
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5" />
             <h2 className="text-lg font-black">
-              {lang === "ar" ? "فريق العمل" : "Our Team"}
+              {t("about.team_title")}
             </h2>
           </div>
           <p className="mt-0.5 text-xs text-primary-foreground/80">
-            {lang === "ar"
-              ? "خريجو كلية الزراعة — جامعة أسيوط 2018م"
-              : "Faculty of Agriculture graduates — Assiut University 2018"}
+            {t("about.team_subtitle")}
           </p>
         </div>
         <CardContent className="p-4">
@@ -231,9 +229,7 @@ export function AboutScreen() {
           </div>
           <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
             {t("about.targets_title")}:{" "}
-            {lang === "ar"
-              ? "البقرة الحلوب (بروتين ١٤٪، طاقة ٦٣٪) — جاموس حلوب (بروتين ١٣٪، طاقة ٦٤٪) — جاموس تسمين (بروتين ١٢٪، طاقة ٦٦٪) — عجول تسمين (بروتين ١٦٪، طاقة ٦٨٪) — الأغنام (بروتين ١٣٪، طاقة ٦٥٪) — الدجاج البياض (بروتين ١٦.٥٪، طاقة ٦٦٪) — أمهات بياض (بروتين ١٧٪، طاقة ٦٨٪) — دجاج التسمين (بروتين ٢١٪، طاقة ٧٠٪) — كتاكيت البادي (بروتين ٢٣٪، طاقة ٧٢٪). للدواجن يمكنك تحديد عدد الطيور في القطيع لحساب التكلفة الإجمالية."
-              : "Dairy cow (protein 14%, energy 63%) — Dairy buffalo (protein 13%, energy 64%) — Fattening buffalo (protein 12%, energy 66%) — Fattening calf (protein 16%, energy 68%) — Sheep (protein 13%, energy 65%) — Layer chicken (protein 16.5%, energy 66%) — Layer breeder (protein 17%, energy 68%) — Broiler (protein 21%, energy 70%) — Broiler starter (protein 23%, energy 72%). For poultry you can set the flock size to compute the total cost."}
+            {t("about.targets_summary")}
           </p>
         </CardContent>
       </Card>
@@ -246,7 +242,7 @@ export function AboutScreen() {
       </div>
 
       {/* Ad at the bottom of about screen */}
-      <AdSection placement="in-feed" label="إعلان" />
+      <AdSection placement="in-feed" label={t("common.ad")} />
       <div className="flex justify-center">
         <AdSmartlink variant="banner" />
       </div>

@@ -270,7 +270,7 @@ export function CalculatorScreenMobile() {
         : "";
     const saved = saveRation({
       name: `${animalNameLabel} — ${weight} ${weightUnitLabel}${flockLabel}${
-        manualMode ? ` (${lang === "ar" ? "يدوية" : "manual"})` : ""
+        manualMode ? ` (${t("calc.manual_suffix")})` : ""
       }`,
       animalKey,
       animalName: animalNameLabel,
@@ -349,12 +349,12 @@ export function CalculatorScreenMobile() {
   const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
 
   const steps = [
-    { n: 1, label: isRtl ? "الحيوان" : "Animal", icon: "🐄" },
-    { n: 2, label: isRtl ? "البيانات" : "Data", icon: "⚖️" },
-    { n: 3, label: isRtl ? "المواد" : "Items", icon: "🌾" },
-    { n: 4, label: isRtl ? "الوضع" : "Mode", icon: "🎯" },
-    { n: 5, label: isRtl ? "الأسعار" : "Prices", icon: "💰" },
-    { n: 6, label: isRtl ? "النتيجة" : "Result", icon: "📊" },
+    { n: 1, label: t("calc.stepper.animal"), icon: "🐄" },
+    { n: 2, label: t("calc.stepper.data"), icon: "⚖️" },
+    { n: 3, label: t("calc.stepper.items"), icon: "🌾" },
+    { n: 4, label: t("calc.stepper.mode"), icon: "🎯" },
+    { n: 5, label: t("calc.stepper.prices"), icon: "💰" },
+    { n: 6, label: t("calc.stepper.result"), icon: "📊" },
   ];
 
   return (
@@ -420,7 +420,7 @@ export function CalculatorScreenMobile() {
           {/* Next button */}
           <div className="mt-4 flex justify-end">
             <Button onClick={() => setStep(2)} className="gap-2" size="lg">
-              {isRtl ? "التالي" : "Next"}
+              {t("calc.next")}
               <NextIcon className="h-4 w-4" />
             </Button>
           </div>
@@ -538,7 +538,7 @@ export function CalculatorScreenMobile() {
               />
               <div className="mt-1 flex items-center justify-between text-[10px] text-muted-foreground">
                 <span>{fmt(animal.flockMin, 0)} {lang === "ar" ? animal.flockUnit : animal.flockUnitEn}</span>
-                <span>{lang === "ar" ? `حتى ${fmt(animal.flockMax, 0)} ${animal.flockUnit} (اكتب الرقم مباشرة)` : `Up to ${fmt(animal.flockMax, 0)} ${animal.flockUnitEn} (type the number directly)`}</span>
+                <span>{t("calc.flock_up_to", { n: fmt(animal.flockMax, 0) })}</span>
               </div>
             </div>
           )}
@@ -560,10 +560,10 @@ export function CalculatorScreenMobile() {
           <div className="flex justify-between gap-2 pt-2">
             <Button onClick={() => setStep(1)} variant="outline" size="lg" className="gap-2">
               <PrevIcon className="h-4 w-4" />
-              {isRtl ? "السابق" : "Back"}
+              {t("calc.back")}
             </Button>
             <Button onClick={() => setStep(3)} size="lg" className="gap-2">
-              {isRtl ? "التالي" : "Next"}
+              {t("calc.next")}
               <NextIcon className="h-4 w-4" />
             </Button>
           </div>
@@ -578,7 +578,7 @@ export function CalculatorScreenMobile() {
           <div className="flex items-center gap-2">
             <span className="text-lg">🌾</span>
             <p className="text-sm font-extrabold text-foreground">
-              {isRtl ? "اختيار المواد الخام" : "Select Ingredients"}
+              {t("calc.ingredients_title")}
             </p>
           </div>
 
@@ -593,9 +593,9 @@ export function CalculatorScreenMobile() {
                   : "border-border text-muted-foreground"
               )}
             >
-              {isRtl ? "تلقائي" : "Automatic"}
+              {t("calc.ingredient_mode.auto")}
               <span className="mt-0.5 block text-[10px] font-normal opacity-80">
-                {isRtl ? "النظام يختار الأفضل" : "System picks best"}
+                {t("calc.ingredient_mode.auto_sub")}
               </span>
             </button>
             <button
@@ -607,9 +607,9 @@ export function CalculatorScreenMobile() {
                   : "border-border text-muted-foreground"
               )}
             >
-              {isRtl ? "يدوي" : "Manual"}
+              {t("calc.ingredient_mode.manual")}
               <span className="mt-0.5 block text-[10px] font-normal opacity-80">
-                {isRtl ? "أختار بنفسي" : "I choose"}
+                {t("calc.ingredient_mode.manual_sub")}
               </span>
             </button>
           </div>
@@ -618,7 +618,7 @@ export function CalculatorScreenMobile() {
           {ingredientSelectionMode === "manual" && (
             <div className="space-y-3">
               <p className="text-[11px] text-muted-foreground">
-                {isRtl ? "اختر المواد المتوفرة لديك. سيتم استخدامها فقط في الحسابات." : "Select ingredients available to you. Only these will be used."}
+                {t("calc.ingredient_select_hint")}
               </p>
               {CATEGORY_ORDER.map((cat) => {
                 const catItems = availableIngredients.filter((ing) => ing.category === cat);
@@ -659,11 +659,11 @@ export function CalculatorScreenMobile() {
               })}
               {selectedIngredients.size === 0 && (
                 <p className="rounded-lg bg-amber-50 p-2 text-center text-[11px] text-amber-700">
-                  {isRtl ? "اختر مادة واحدة على الأقل" : "Select at least one ingredient"}
+                  {t("calc.ingredient_select_at_least")}
                 </p>
               )}
               <p className="text-[10px] text-muted-foreground">
-                {isRtl ? `المختار: ${selectedIngredients.size} مادة` : `Selected: ${selectedIngredients.size} items`}
+                {t("calc.ingredient_selected_count", { n: selectedIngredients.size })}
               </p>
             </div>
           )}
@@ -672,10 +672,10 @@ export function CalculatorScreenMobile() {
           {ingredientSelectionMode === "auto" && (
             <div className="rounded-lg bg-primary/5 p-3 text-center">
               <p className="text-xs font-bold text-primary">
-                {isRtl ? "النظام سيستخدم جميع المواد المناسبة تلقائياً" : "System will use all suitable ingredients automatically"}
+                {t("calc.ingredient_auto_info")}
               </p>
               <p className="mt-1 text-[10px] text-muted-foreground">
-                {isRtl ? `${availableIngredients.length} مادة متاحة` : `${availableIngredients.length} ingredients available`}
+                {t("calc.ingredient_auto_count", { n: availableIngredients.length })}
               </p>
             </div>
           )}
@@ -684,7 +684,7 @@ export function CalculatorScreenMobile() {
           <div className="flex justify-between gap-2 pt-2">
             <Button onClick={() => setStep(2)} variant="outline" size="lg" className="gap-2">
               <PrevIcon className="h-4 w-4" />
-              {isRtl ? "السابق" : "Back"}
+              {t("calc.back")}
             </Button>
             <Button
               onClick={() => setStep(4)}
@@ -692,7 +692,7 @@ export function CalculatorScreenMobile() {
               className="gap-2"
               disabled={ingredientSelectionMode === "manual" && selectedIngredients.size === 0}
             >
-              {isRtl ? "التالي" : "Next"}
+              {t("calc.next")}
               <NextIcon className="h-4 w-4" />
             </Button>
           </div>
@@ -780,10 +780,10 @@ export function CalculatorScreenMobile() {
           <div className="flex justify-between gap-2 pt-2">
             <Button onClick={() => setStep(3)} variant="outline" size="lg" className="gap-2">
               <PrevIcon className="h-4 w-4" />
-              {isRtl ? "السابق" : "Back"}
+              {t("calc.back")}
             </Button>
             <Button onClick={() => setStep(5)} size="lg" className="gap-2">
-              {isRtl ? "التالي" : "Next"}
+              {t("calc.next")}
               <NextIcon className="h-4 w-4" />
             </Button>
           </div>
@@ -821,7 +821,7 @@ export function CalculatorScreenMobile() {
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-foreground leading-tight">{ingName}</p>
                     <p className="text-[10px] text-muted-foreground">
-                      {lang === "ar" ? "بروتين" : "CP"}: {ing.protein}% · {lang === "ar" ? "طاقة" : "TDN"}: {ing.tdn}%
+                      {t("calc.cp")}: {ing.protein}% · {t("calc.tdn")}: {ing.tdn}%
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
@@ -837,7 +837,7 @@ export function CalculatorScreenMobile() {
                       }}
                       className="w-16 rounded-md border border-border bg-background px-1.5 py-1 text-center text-sm font-extrabold tabular-nums focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
                     />
-                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{lang === "ar" ? "ج/كجم" : "EGP/kg"}</span>
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{t("calc.egp_per_kg")}</span>
                   </div>
                 </div>
               );
@@ -851,10 +851,10 @@ export function CalculatorScreenMobile() {
           <div className="flex justify-between gap-2 pt-2">
             <Button onClick={() => setStep(4)} variant="outline" size="lg" className="gap-2">
               <PrevIcon className="h-4 w-4" />
-              {isRtl ? "السابق" : "Back"}
+              {t("calc.back")}
             </Button>
             <Button onClick={() => setStep(6)} size="lg" className="gap-2">
-              {isRtl ? "احسب العليقة" : "Calculate"}
+              {t("calc.calculate")}
               <Calculator className="h-4 w-4" />
             </Button>
           </div>
@@ -870,11 +870,11 @@ export function CalculatorScreenMobile() {
         <div className="mb-3 flex justify-start">
           <Button onClick={() => setStep(5)} variant="outline" size="sm" className="gap-2">
             <PrevIcon className="h-4 w-4" />
-            {isRtl ? "تعديل البيانات" : "Edit data"}
+            {t("calc.edit_data")}
           </Button>
         </div>
         {/* In-feed ad above the result */}
-        <AdSection placement="in-feed" label="إعلان" className="mb-3" />
+        <AdSection placement="in-feed" label={t("common.ad")} className="mb-3" />
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Calculator className="h-5 w-5 text-primary" />
           <h3 className="text-base font-extrabold text-foreground">
@@ -966,7 +966,7 @@ export function CalculatorScreenMobile() {
       <div className="mt-4 flex justify-center">
         <Button onClick={() => setStep(1)} variant="outline" size="lg" className="gap-2">
           <RotateCcw className="h-4 w-4" />
-          {isRtl ? "ابدأ من جديد" : "Start over"}
+          {t("calc.start_over")}
         </Button>
       </div>
       </>

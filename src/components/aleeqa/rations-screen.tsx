@@ -126,7 +126,7 @@ export function RationsScreen() {
 
   const handleShare = (r: SavedRation) => {
     const animal = ANIMALS[r.animalKey];
-    const flockUnit = lang === "ar" ? animal?.flockUnit ?? "رأس" : animal?.flockUnitEn ?? "head";
+    const flockUnit = lang === "ar" ? animal?.flockUnit ?? t("common.head_unit") : animal?.flockUnitEn ?? t("common.head_unit");
     const text = rationToText(r.result, r.animalName, r.weight, r.mode, flockUnit, lang);
     const nav = navigator as Navigator & {
       share?: (d: { text: string; title?: string }) => Promise<void>;
@@ -234,7 +234,7 @@ export function RationsScreen() {
           {rations.map((r) => {
             const animal = ANIMALS[r.animalKey];
             const weightUnit = lang === "ar" ? animal?.weightUnit : animal?.weightUnitEn;
-            const flockUnit = lang === "ar" ? animal?.flockUnit ?? "رأس" : animal?.flockUnitEn ?? "head";
+            const flockUnit = lang === "ar" ? animal?.flockUnit ?? t("common.head_unit") : animal?.flockUnitEn ?? t("common.head_unit");
             const isCompareChecked = compareIds.includes(r.id);
             const isCompareDisabled =
               compareMode && compareIds.length >= 2 && !isCompareChecked;
@@ -322,14 +322,12 @@ export function RationsScreen() {
               {selected?.name}
             </DialogTitle>
             <DialogDescription>
-              {lang === "ar"
-                ? "تفاصيل العليقة المحفوظة — يمكنك مشاركتها أو طباعتها."
-                : "Saved ration details — you can share or print it."}
+              {t("rations.dialog_desc")}
             </DialogDescription>
           </DialogHeader>
           {selected && (() => {
             const animal = ANIMALS[selected.animalKey];
-            const flockUnit = lang === "ar" ? animal?.flockUnit ?? "رأس" : animal?.flockUnitEn ?? "head";
+            const flockUnit = lang === "ar" ? animal?.flockUnit ?? t("common.head_unit") : animal?.flockUnitEn ?? t("common.head_unit");
             const flockEmoji = animal?.emoji ?? "📄";
             return (
               <RationResult
@@ -370,7 +368,7 @@ export function RationsScreen() {
       </Dialog>
 
       {/* Ad at the bottom of rations screen */}
-      <AdSection placement="in-feed" label="إعلان" />
+      <AdSection placement="in-feed" label={t("common.ad")} />
     </div>
   );
 }

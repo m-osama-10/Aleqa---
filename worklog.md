@@ -572,3 +572,44 @@ The colloquial tone is intentional for the Egyptian farmer target audience, but 
 - ration-report.ts REPORT_DICT AR ↔ EN: ✅ full parity (42 keys each)
 - Components → Dictionary: ❌ 18 keys used in ration-result.tsx point to non-existent `safeResult.*` namespace (CRITICAL)
 - Dictionary → Components: ❌ 31 keys defined in i18n.tsx are dead code (`prices.*`, `result.*`, `data.*`, plus a few stray `common.*`/`nav.*`/`manual.*` keys)
+
+---
+Task ID: 3
+Agent: i18n-migrator
+Task: Migrate hardcoded strings to i18n keys
+
+Work Log:
+- Read worklog.md and src/lib/i18n.tsx to understand existing dictionary structure and conventions.
+- Inventoried bilingual strings in each target file (calculator-screen-mobile, manual-editor, prices-screen, about-screen, rations-screen, language-toggle, common/ad-banner, and AdSection label="إعلان" usages across all components).
+- Added new AR + EN keys to src/lib/i18n.tsx in 5 batches:
+  * common: common.ad, common.dismiss, common.head_unit, common.toggle_lang_aria
+  * lang: lang.toggle_hint (single-key language toggle hint that resolves to target language)
+  * calc: 25 new keys — stepper labels (calc.stepper.*), nav buttons (calc.next/back/calculate/start_over/edit_data), manual_suffix, flock_up_to, ingredients_title, ingredient_mode.* (auto/manual + subs), ingredient_select_hint, ingredient_select_at_least, ingredient_selected_count, ingredient_auto_info, ingredient_auto_count, calc.cp, calc.tdn, calc.egp_per_kg
+  * manual: manual.auto_balance, manual.auto_balance_sub, manual.locked_count
+  * prices: 21 new keys — ingredient_db_title, reset_btn, reset_confirm, edit_hint, search_placeholder, editable_hint, cp_label, tdn_label, cf_label, egp_per_kg_short, edit_nutrition, price_field, protein_field, tdn_field, fiber_field, fat_field, calcium_field, phosphorus_field, dm_field, min_usage_field, max_usage_field
+  * rations: rations.dialog_desc
+  * about: about.team_title, about.team_subtitle, about.targets_summary
+- Migrated calculator-screen-mobile.tsx (25 strings): stepper labels, nav buttons ("التالي"/"السابق" x4 occurrences each), "ابدأ من جديد", "تعديل البيانات", "احسب العليقة", ingredient mode buttons ("تلقائي"/"يدوي" + subs), ingredient selection helpers, CP/TDN labels, "ج/كجم" unit, "يدوية" suffix, and AdSection label="إعلان".
+- Migrated manual-editor.tsx (3 strings): "موازنة تلقائية ذكية"/"Smart Auto-Balance", "ثبّت الخامات🔒 ويعدّل الباقي تلقائياً"/"Lock🔒, auto-adjust rest", "مثبت"/"locked".
+- Migrated prices-screen.tsx (~25 strings): header title, reset button, reset confirm prompt, edit hint, search placeholder, editable hint, CP/TDN/CF labels, EGP/kg unit, "Edit Nutrition Values", and all 10 nutrition EditField labels (price, CP, TDN, CF, EE, Ca, P, DM, min/max usage). Added `t` prop to IngredientCard child component.
+- Migrated about-screen.tsx: team title, team subtitle, targets summary paragraph (long bilingual string), and AdSection label.
+- Migrated rations-screen.tsx: dialog description ("تفاصيل العليقة المحفوظة"/"Saved ration details") and "رأس"/"head" fallback (3 occurrences) → t("common.head_unit"). Also AdSection label.
+- Migrated language-toggle.tsx: aria-label and title attributes via t("common.toggle_lang_aria") and t("lang.toggle_hint"). Used the i18n dictionary's natural fallback (AR dict returns "Switch to English", EN dict returns "التبديل للعربية") so the hint always shows the target language.
+- Updated all 8 AdSection `label="إعلان"` usages to `label={t("common.ad")}` across: calculator-screen-mobile.tsx, calculator-screen.tsx, prices-screen.tsx, rations-screen.tsx, about-screen.tsx, landing-screen.tsx (3 uses).
+- Updated src/components/common/ad-banner.tsx: replaced `aria-label={isRtl ? "إغلاق" : "Dismiss"}` → `aria-label={t("common.dismiss")}` and `{isRtl ? "إعلان" : "SPONSORED"}` → `{t("common.ad")}`. Removed unused `isRtl` const.
+- Verified with `bun run lint` — only pre-existing error remains in src/app/page.tsx (unrelated to i18n). All 10 modified files lint clean.
+- Verified with `bunx tsc --noEmit` — no new TypeScript errors introduced (remaining rations-screen.tsx TS errors at lines 481-482 are pre-existing and unrelated to i18n migration).
+
+Stage Summary:
+- Total strings migrated: ~75 (calc-mobile 25 + manual-editor 3 + prices-screen 25 + about-screen 3 + rations-screen 4 + language-toggle 2 + ad-banner 2 + 8 AdSection labels)
+- New i18n keys added: 53 keys × 2 (AR + EN) = 106 new dictionary entries
+  * common: 4 (ad, dismiss, head_unit, toggle_lang_aria)
+  * lang: 1 (toggle_hint)
+  * calc: 25
+  * manual: 3 (auto_balance, auto_balance_sub, locked_count)
+  * prices: 21
+  * rations: 1 (dialog_desc)
+  * about: 3 (team_title, team_subtitle, targets_summary)
+- Files touched: 11 (i18n.tsx + 10 component files)
+- Files NOT touched (per task rules): src/lib/feed-lp.ts (warnings handled by translateWarnings), src/lib/ration-report.ts (own REPORT_DICT), ads/ad-banner.tsx and ads/ad-native-banner.tsx (out of task scope — Arabic-only aria-labels in ad library, kept minimal).
+- Pre-existing lint error in src/app/page.tsx (react-hooks/error-boundaries) and pre-existing TS errors in rations-screen.tsx lines 481-482 are unrelated to this i18n migration.

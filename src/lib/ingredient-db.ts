@@ -117,5 +117,20 @@ export const CATEGORY_LABELS: Record<IngredientCategory, string> = {
   additive: "إضافات أخرى",
 };
 
+/** Category labels (English). */
+export const CATEGORY_LABELS_EN: Record<IngredientCategory, string> = {
+  energy: "Energy sources",
+  protein: "Protein sources",
+  fiber: "Fiber sources",
+  mineral: "Minerals",
+  vitamin: "Vitamins",
+  additive: "Other additives",
+};
+
+/** Get category label by language. */
+export function categoryLabel(cat: IngredientCategory, lang: "ar" | "en"): string {
+  return lang === "ar" ? CATEGORY_LABELS[cat] : CATEGORY_LABELS_EN[cat];
+}
+
 /** Category order for display. */
 export const CATEGORY_ORDER: IngredientCategory[] = ["energy", "protein", "fiber", "mineral", "vitamin", "additive"];

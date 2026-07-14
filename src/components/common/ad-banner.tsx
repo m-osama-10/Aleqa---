@@ -17,8 +17,7 @@ export function AdBanner({ placement = "home", className = "" }: AdBannerProps) 
   const [ad, setAd] = useState<Ad | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const { settings } = useAppStore();
-  const { lang } = useLang();
-  const isRtl = lang === "ar";
+  const { t } = useLang();
 
   useEffect(() => {
     if (settings.ads_enabled === false) return;
@@ -49,7 +48,7 @@ export function AdBanner({ placement = "home", className = "" }: AdBannerProps) 
       <button
         onClick={() => setDismissed(true)}
         className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-background/80 text-muted-foreground hover:text-foreground"
-        aria-label={isRtl ? "إغلاق" : "Dismiss"}
+        aria-label={t("common.dismiss")}
       >
         <X className="h-3.5 w-3.5" />
       </button>
@@ -66,7 +65,7 @@ export function AdBanner({ placement = "home", className = "" }: AdBannerProps) 
         )}
         <div className="flex min-w-0 flex-1 flex-col justify-center">
           <span className="mb-1 inline-flex w-fit rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
-            {isRtl ? "إعلان" : "SPONSORED"}
+            {t("common.ad")}
           </span>
           <h4 className="line-clamp-1 text-sm font-bold text-foreground">{ad.title}</h4>
           {ad.description && (
