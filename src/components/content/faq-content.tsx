@@ -139,8 +139,41 @@ export function FaqContent() {
   const faqs = lang === "ar" ? FAQ_AR : FAQ_EN;
   const title = lang === "ar" ? "الأسئلة الشائعة" : "Frequently Asked Questions";
 
+  // FAQPage JSON-LD schema — combines AR + EN Q&As so search engines can
+  // index both languages. Rendered as a raw <script> tag for static export.
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      ...FAQ_AR.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.a,
+          inLanguage: "ar",
+        },
+        inLanguage: "ar",
+      })),
+      ...FAQ_EN.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.a,
+          inLanguage: "en",
+        },
+        inLanguage: "en",
+      })),
+    ],
+  };
+
   return (
     <ContentPageLayout title={title}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="space-y-4">
         {faqs.map((faq, i) => (
           <div

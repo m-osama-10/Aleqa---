@@ -12,7 +12,10 @@ const alexandria = Alexandria({
   display: "swap",
 });
 
+const SITE_URL = "https://aleqa.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "عليقة | حاسبة العليقة الذكية للمربي المصري",
   description:
     "أداة تقنية مجانية تساعد مربي الأبقار والجاموس والأغنام والدواجن في مصر على تركيب العلائق الغذائية بدقة علمية وبأقل تكلفة — محرك برمجة خطية يعمل أوفلاين.",
@@ -37,17 +40,33 @@ export const metadata: Metadata = {
     icon: "/logo.svg",
     apple: "/icon-192.png",
   },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "عليقة | حاسبة العليقة الذكية",
     description: "حاسبة العليقة الذكية للمربي المصري — بدقة علمية وبأقل تكلفة.",
     siteName: "عليقة",
     type: "website",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
     title: "عليقة | حاسبة العليقة الذكية",
     description: "حاسبة العليقة الذكية للمربي المصري.",
   },
+};
+
+/** Organization JSON-LD schema — describes the publisher (Aleeqa) to search engines. */
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "عليقة",
+  alternateName: "Aleeqa",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.svg`,
+  description: "حاسبة العليقة الذكية للمربي المصري",
+  foundingDate: "2025",
 };
 
 export const viewport: Viewport = {
@@ -78,6 +97,12 @@ export default function RootLayout({
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
           crossOrigin="anonymous"
+        />
+        {/* Organization JSON-LD schema — embedded as raw HTML so it appears
+            in the static export output for search engine crawlers. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_SCHEMA) }}
         />
       </head>
       <body

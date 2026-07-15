@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "حاسبة تكلفة التسمين | عليقة",
   description:
     "احسب تكلفة تسمين الحيوانات وصافي الربح وهامش الربح وسعر التعادل والعائد على الاستثمار بدقة.",
+  alternates: {
+    canonical: "/livestock-cost-calculator",
+  },
 };
 
 export default function LivestockCostCalculatorPage() {

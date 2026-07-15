@@ -4,6 +4,9 @@ import { FaqContent } from "@/components/content/faq-content";
 export const metadata: Metadata = {
   title: "الأسئلة الشائعة | عليقة",
   description: "إجابات على أكثر الأسئلة شيوعاً حول حاسبة العليقة واستخدامها.",
+  alternates: {
+    canonical: "/faq",
+  },
 };
 
 export default function FaqPage() {

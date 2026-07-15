@@ -1,15 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, Leaf } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/aleeqa/language-toggle";
 import { ThemeToggle } from "@/components/aleeqa/theme-toggle";
 
+const SITE_URL = "https://aleqa.vercel.app";
+
 /**
- * Shared layout for static content pages (privacy, faq, guide, nutrition).
+ * Shared layout for static content pages (privacy, faq, guide, nutrition,
+ * about, contact, terms, disclaimer, ingredients, compare, knowledge, etc.).
  * Provides a header with logo + back link + language/theme toggles,
- * and a footer with links to other content pages.
+ * a BreadcrumbList JSON-LD schema (Home > Current Page), and a footer
+ * with links to other content pages.
  */
 export function ContentPageLayout({
   title,
@@ -18,11 +23,39 @@ export function ContentPageLayout({
   title: string;
   children: React.ReactNode;
 }) {
-  const { lang, t } = useLang();
+  const { lang } = useLang();
   const isRtl = lang === "ar";
+  const pathname = usePathname() ?? "/";
+
+  // BreadcrumbList JSON-LD schema — Home > Current Page.
+  // Embedded as a raw <script> tag so it appears in the static export.
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: isRtl ? "الرئيسية" : "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: title,
+        item: `${SITE_URL}${pathname === "/" ? "/" : `${pathname}/`}`,
+      },
+    ],
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      {/* BreadcrumbList JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-lg">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between gap-3 px-4">
@@ -61,6 +94,14 @@ export function ContentPageLayout({
       <footer className="border-t border-border bg-secondary/40">
         <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+            <Link href="/about" className="transition-colors hover:text-primary">
+              {isRtl ? "من نحن" : "About"}
+            </Link>
+            <span>·</span>
+            <Link href="/contact" className="transition-colors hover:text-primary">
+              {isRtl ? "اتصل بنا" : "Contact"}
+            </Link>
+            <span>·</span>
             <Link href="/guide" className="transition-colors hover:text-primary">
               {isRtl ? "دليل الاستخدام" : "User Guide"}
             </Link>
@@ -91,6 +132,14 @@ export function ContentPageLayout({
             <span>·</span>
             <Link href="/privacy" className="transition-colors hover:text-primary">
               {isRtl ? "سياسة الخصوصية" : "Privacy Policy"}
+            </Link>
+            <span>·</span>
+            <Link href="/terms" className="transition-colors hover:text-primary">
+              {isRtl ? "الشروط والأحكام" : "Terms"}
+            </Link>
+            <span>·</span>
+            <Link href="/disclaimer" className="transition-colors hover:text-primary">
+              {isRtl ? "إخلاء المسؤولية" : "Disclaimer"}
             </Link>
           </div>
           <p className="mt-3 text-center text-[10px] text-muted-foreground">

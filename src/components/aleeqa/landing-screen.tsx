@@ -489,6 +489,14 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
           </div>
           {/* Content page links */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-border/40 pt-3 text-[11px]">
+            <a href="/about" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "من نحن" : "About"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/contact" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "اتصل بنا" : "Contact"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
             <a href="/guide" className="text-muted-foreground transition-colors hover:text-primary">
               {lang === "ar" ? "دليل الاستخدام" : "User Guide"}
             </a>
@@ -519,6 +527,14 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
             <span className="text-muted-foreground/40">·</span>
             <a href="/privacy" className="text-muted-foreground transition-colors hover:text-primary">
               {lang === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/terms" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "الشروط والأحكام" : "Terms"}
+            </a>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="/disclaimer" className="text-muted-foreground transition-colors hover:text-primary">
+              {lang === "ar" ? "إخلاء المسؤولية" : "Disclaimer"}
             </a>
           </div>
         </div>
