@@ -90,10 +90,12 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               <Info className="h-4 w-4" />
               <span className="hidden sm:inline">{lang === "ar" ? "حول" : "About"}</span>
             </Button>
-            <Button onClick={onEnter} size="sm" className="gap-1.5">
-              <Calculator className="h-4 w-4" />
-              {t("common.start_calc")}
-            </Button>
+            <a href="/calculator">
+              <Button size="sm" className="gap-1.5">
+                <Calculator className="h-4 w-4" />
+                {t("common.start_calc")}
+              </Button>
+            </a>
             <LanguageToggle />
             <ThemeToggle />
             <button
@@ -148,10 +150,12 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                 </p>
 
                 <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Button onClick={onEnter} size="lg" className="gap-2">
-                    <Calculator className="h-4 w-4" />
-                    {t("common.start_now")}
-                  </Button>
+                  <a href="/calculator">
+                    <Button size="lg" className="gap-2">
+                      <Calculator className="h-4 w-4" />
+                      {t("common.start_now")}
+                    </Button>
+                  </a>
                   <Button onClick={() => scrollTo("why")} size="lg" variant="outline">
                     {t("landing.hero.why_btn")}
                     <ArrowLeft className="h-4 w-4" />
@@ -355,7 +359,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
               </a>
 
               {/* Calculator */}
-              <button onClick={onEnter} className="group rounded-2xl border border-border/60 bg-card p-5 text-start transition-all hover:border-primary/40 hover:shadow-lg">
+              <a href="/calculator" className="group rounded-2xl border border-border/60 bg-card p-5 text-start transition-all hover:border-primary/40 hover:shadow-lg">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary transition-transform group-hover:scale-110">
                   <Calculator className="h-6 w-6" />
                 </div>
@@ -365,7 +369,7 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   {lang === "ar" ? "احسب أرخص عليقة متوازنة في ٦ خطوات بمحرك برمجة خطية." : "Calculate the cheapest balanced ration in 6 steps with an LP engine."}
                 </p>
-              </button>
+              </a>
             </div>
           </div>
         </section>
@@ -448,10 +452,12 @@ export function LandingScreen({ onEnter }: LandingScreenProps) {
                 <p className="mx-auto mt-2 max-w-lg text-balance text-sm text-muted-foreground">
                   {t("landing.cta.desc")}
                 </p>
-                <Button onClick={onEnter} size="lg" className="mt-5 gap-2">
-                  <Calculator className="h-4 w-4" />
-                  {t("common.start_calc")}
-                </Button>
+                <a href="/calculator">
+                  <Button size="lg" className="mt-5 gap-2">
+                    <Calculator className="h-4 w-4" />
+                    {t("common.start_calc")}
+                  </Button>
+                </a>
               </CardContent>
             </Card>
           </div>
@@ -610,8 +616,8 @@ function HeroPhoneMockup({ onEnter }: { onEnter: () => void }) {
       </div>
 
       {/* phone */}
-      <button
-        onClick={onEnter}
+      <a
+        href="/calculator"
         className="relative block w-full rounded-[2.5rem] border-[6px] border-foreground/90 bg-foreground/90 p-1 text-right shadow-2xl transition-transform hover:scale-[1.02]"
         aria-label={lang === "ar" ? "افتح الحاسبة" : "Open calculator"}
       >
@@ -680,7 +686,7 @@ function HeroPhoneMockup({ onEnter }: { onEnter: () => void }) {
             </div>
           </div>
         </div>
-      </button>
+      </a>
     </div>
   );
 }
